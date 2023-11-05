@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { SiteHeader } from '@/components/site-header';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
+import PlausibleProvider from 'next-plausible';
 
 export const metadata: Metadata = {
   title: {
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
       <html lang='en' suppressHydrationWarning>
-        <head />
+        <head>
+          <PlausibleProvider domain='lucasverdiell.xyz' />
+        </head>
         <body
           className={cn(
             'min-h-screen bg-background font-sans antialiased'
