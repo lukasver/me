@@ -1,29 +1,42 @@
-import Link from 'next/link';
-
+import Container from '@/components/container';
+import { Card, CardHeader } from '@/components/ui/card';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import Image from 'next/image';
+import code from '../../public/code.jpeg';
+import HomeTabs from '@/components/home-tabs';
+import { PageProps } from '@/types';
 import { siteConfig } from '@/config/site';
-import { buttonVariants } from '@/components/ui/button';
 
-export default function IndexPage() {
+export default function RootPage({ searchParams }: PageProps) {
   return (
     <main className='h-screen snap-y snap-mandatory overflow-y-scroll'>
-      <section id={'hero'} className='bg-green-500'>
-        <h1>section one</h1>
+      <section id={'hero'}>
+        <Container className='flex flex-col gap-2 mb-12'>
+          <div className='flex justify-center mb-12'>
+            <h1 className='text-2xl font-bold'>
+              Hi, I'm {siteConfig.name} 👋!
+            </h1>
+          </div>
+          <div className='flex items-stretch justify-center gap-2'>
+            <Card className='min-w-[500px] p-4'>
+              <AspectRatio ratio={16 / 9}>
+                <Image
+                  src={code}
+                  alt='Cover picture'
+                  fill={true}
+                  className='rounded-md object-cover'
+                />
+              </AspectRatio>
+            </Card>
+            <HomeTabs tab={searchParams.tab && String(searchParams.tab)} />
+          </div>
+        </Container>
       </section>
-      <section id={'stack'} className='bg-blue-500'>
+      <section id={'stack'} className='bg-slate-900'>
         <h1>section two</h1>
       </section>
-      <section id={'projects'} className='bg-red-500'>
+      <section id={'projects'}>
         <h1>section three</h1>
-        <div className='flex gap-4'>
-          <Link
-            target='_blank'
-            rel='noreferrer'
-            href={siteConfig.links.github}
-            className={buttonVariants({ variant: 'outline', size: 'lg' })}
-          >
-            GitHub
-          </Link>
-        </div>
       </section>
     </main>
   );
