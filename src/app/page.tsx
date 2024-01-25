@@ -39,13 +39,24 @@ export default function RootPage({ searchParams }: PageProps) {
         <h1>section three</h1>
         <div>
           <iframe
-            src={'https://stage.smat.io/public/partnerships/sphere'}
+            src={'https://app.smat.io/public/partnerships/sphere'}
             referrerPolicy='no-referrer-when-downgrade'
             sandbox='allow-scripts allow-same-origin allow-popups'
-            allow='(src https://sphere.swiss https://smat.io)'
             loading='lazy'
             width='300'
             height='600'
+            title='Sphere @ Smat'
+            style={{ border: 'none' }}
+          />
+        </div>
+        <div>
+          <iframe
+            src={'https://app.smat.io/public/partnerships/sphere?bg=off'}
+            referrerPolicy='no-referrer-when-downgrade'
+            sandbox='allow-scripts allow-same-origin allow-popups'
+            loading='lazy'
+            width='1080'
+            height='380'
             title='Sphere @ Smat'
             style={{ border: 'none' }}
           />
