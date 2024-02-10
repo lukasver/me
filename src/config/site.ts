@@ -3,12 +3,8 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
   name: 'Lucas Verdiell',
   description:
-    "Hi, I'm Lucas Verdiell, a software engineer from Argentina, currently based in Portugal.",
+    'IT & transportation systems professional from Argentina, currently based in Portugal.',
   mainNav: [
-    {
-      title: 'Stack',
-      href: '/#stack',
-    },
     {
       title: 'Projects',
       href: '/#projects',
@@ -16,6 +12,10 @@ export const siteConfig = {
     {
       title: 'Contact',
       href: '/contact',
+    },
+    {
+      title: 'Blog',
+      href: '/blog',
     },
   ],
   links: {

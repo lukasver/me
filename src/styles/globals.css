@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 220 14% 96%%;
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
@@ -13,11 +13,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 234 24% 48%;
+    --primary-foreground: 240 25% 94%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 168 25% 40%;
+    --secondary-foreground: 164 27% 89%;
 
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -33,10 +33,44 @@
     --ring: 240 10% 3.9%;
 
     --radius: 0.5rem;
+
+    --text-gradient: linear-gradient(
+      to right top,
+      #5e6499,
+      #6c71a3,
+      #7a7fad,
+      #898db7,
+      #979bc1,
+      #919ec2,
+      #8da1c2,
+      #89a4c1,
+      #719cb3,
+      #5e94a1,
+      #528a8c,
+      #4d8076
+    );
+
+    --gradient: linear-gradient(
+      to bottom,
+      #30304a,
+      #29293f,
+      #212234,
+      #1a1b29,
+      #14141f
+    );
+    --gradient-bottom: linear-gradient(
+      to top,
+      #30304a,
+      #29293f,
+      #212234,
+      #1a1b29,
+      #14141f
+    );
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    /* --background: 240 10% 3.9%; */
+    --background: 240 22% 10%;
     --foreground: 0 0% 98%;
 
     --card: 240 10% 3.9%;
@@ -45,11 +79,11 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 234 24% 48%;
+    --primary-foreground: 240 25% 94%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 168 25% 40%;
+    --secondary-foreground: 164 27% 89%;
 
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
@@ -76,5 +110,36 @@
 
   section {
     @apply snap-start w-screen h-screen grid place-items-center;
+  }
+}
+
+@layer utilities {
+  .grid-dynamic {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(15%, 1fr));
+    grid-template-rows: auto;
+  }
+  .grid-dynamic-25 {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    grid-template-rows: auto;
+  }
+  .bg-gradient {
+    background-image: var(--gradient);
+    background-repeat: no-repeat;
+    background-size: 100% 10%;
+  }
+  .bg-gradient-bottom {
+    background-image: var(--gradient-bottom);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: var(--text-gradient);
   }
 }

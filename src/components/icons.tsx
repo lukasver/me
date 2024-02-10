@@ -1,4 +1,5 @@
 import {
+  Loader2,
   LucideIcon,
   LucideProps,
   Moon,
@@ -28,4 +29,5 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  loader: Loader2,
 };
