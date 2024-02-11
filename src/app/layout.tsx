@@ -61,6 +61,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
             rel='stylesheet'
             href='https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css'
           />
+          <noscript>
+            <meta
+              httpEquiv='refresh'
+              content="0; URL='https://www.youtube.com/watch?v=dQw4w9WgXcQ'"
+            />
+          </noscript>
         </head>
         <body
           className={cn(
