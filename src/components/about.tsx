@@ -19,7 +19,7 @@ function About() {
           .
         </p>
         <p>
-          His journey encompasses more than 4 years as a <b>Web Developer</b>
+          His journey encompasses more than 4 years as a <b>Web Developer</b>{' '}
           alongside another 4 years as a <b>Professor</b> and <b>Trainer</b>,
           equipping him with a profound grasp of both the technical and business
           realms. He holds a Bachelor's degree in Hotel Management, further

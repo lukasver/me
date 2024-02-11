@@ -53,9 +53,7 @@ function InputsWrapper({ name, ...props }: InputProps) {
       render={({ field }) => (
         <FormItem className={cn(props.className)}>
           {props.label && props.type !== INPUTS_TYPES.Checkbox && (
-            <FormLabel className={'font-bold text-primary'}>
-              {props.label}
-            </FormLabel>
+            <FormLabel className={'font-bold'}>{props.label}</FormLabel>
           )}
           <FormControl>
             <GenericInput type={props.type} {...field} />

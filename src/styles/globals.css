@@ -142,4 +142,17 @@
     color: transparent;
     background-image: var(--text-gradient);
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar::-moz-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    background-color: transparent;
+  }
 }

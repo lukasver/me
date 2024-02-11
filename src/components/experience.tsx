@@ -9,9 +9,9 @@ function Experience() {
           <>
             <div className='flex flex-col gap-2'>
               <div className='flex flex-col lg:flex-row justify-between'>
-                <div className='flex gap-2 items-center'>
+                <div className='flex flex-row gap-2 items-center'>
                   <h3 className='font-bold font-head'>{exp.name}</h3>
-                  <span className='text-secondary font-bold'>@</span>
+                  <span className='text-secondary font-bold '>@</span>
                   <Link
                     href={exp.href}
                     target='_blank'
@@ -23,7 +23,7 @@ function Experience() {
                 </div>
                 <p className='font-sans text-sm'>{exp.date}</p>
               </div>
-              <p className='text-sm whitespace-pre'>{exp.description}</p>
+              <p className='text-sm sm:whitespace-pre'>{exp.description}</p>
             </div>
             {index === experience?.length - 1 ? null : (
               <Separator className='mb-2' />

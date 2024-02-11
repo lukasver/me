@@ -8,10 +8,10 @@ import { getPseudoRandomNumber } from '@/lib/utils';
 export default function RootPage({ searchParams }: PageProps) {
   return (
     <>
-      <main className='h-screen snap-y snap-mandatory overflow-y-scroll'>
-        <section id='hero' className='dark:bg-gradient'>
-          <Container className='flex flex-col gap-4 xl:gap-8 2xl:gap-20 xl:-mt-20 2xl:-mt-40 px-4'>
-            <div className='flex'>
+      <main className='min-h-screen h-[unset] md:h-screen snap-y snap-mandatory overflow-y-scroll'>
+        <section id='hero' className='dark:bg-gradient h-full'>
+          <Container className='flex flex-col gap-4 xl:gap-8 2xl:gap-20 xl:-mt-20 2xl:-mt-40 px-4 mt-4 sm:mt-0'>
+            <div className='flex justify-center lg:justify-normal'>
               <div className='flex flex-row justify-between gap-4 items-center'>
                 <div className='flex gap-2 flex-1 text-3xl md:text-5xl xl:text-5xl 2xl:text-8xl font-head overflow-hidden whitespace-nowrap'>
                   <span>Hi, I'm</span>
@@ -21,8 +21,8 @@ export default function RootPage({ searchParams }: PageProps) {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col md:flex-row items-stretch justify-center gap-2 xl:gap-10 animate-fade-in-2'>
-              <div className='grow-0 shrink-0 basis-[420px] max-w-[420px]'>
+            <div className='flex flex-col lg:flex-row items-stretch justify-center gap-2 xl:gap-10 animate-fade-in-2'>
+              <div className='grow-0 shrink-0 sm:basis-[420px] sm:max-w-[420px] self-center'>
                 <Carousel
                   sources={Array.from({ length: 5 }).map(() => ({
                     src: `/assets/${getPseudoRandomNumber(5)}.webp`,

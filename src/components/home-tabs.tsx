@@ -38,7 +38,7 @@ function HomeTabs({ tab = 'about' }: { tab?: string }) {
       onValueChange={onTabChange}
       defaultValue={tab}
       className={cn(
-        'h-full p-4 rounded-xl border bg-card text-card-foreground shadow shadow-primary/50 w-full max-h-[420px] overflow-y-scroll',
+        'h-full p-4 rounded-xl border bg-card text-card-foreground shadow shadow-primary/50 w-full sm:max-h-[420px] overflow-y-scroll no-scrollbar',
         tab === 'about' && 'overflow-hidden'
       )}
     >
