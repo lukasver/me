@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-//@ts-expect-error
 import Cal, { getCalApi } from '@calcom/embed-react';
 
 function CalComponent() {
