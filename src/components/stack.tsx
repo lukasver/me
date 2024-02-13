@@ -2,7 +2,7 @@ import { cn, getPseudoRandomNumber } from '@/lib/utils';
 
 function Stack() {
   return (
-    <div className='grid-dynamic-25 sm:grid-dynamic w-full flex-1 my-6'>
+    <div className='grid-dynamic-25 sm:grid-dynamic w-full flex-1 md:mt-2 lg:my-6'>
       {stacks.map(({ name, label, type }) => {
         const icon = <i className={`text-secondary devicon-${name}-plain`} />;
         const mapping = {

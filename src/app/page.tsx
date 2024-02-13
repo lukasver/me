@@ -4,6 +4,13 @@ import { PageProps } from '@/types';
 import { siteConfig } from '@/config/site';
 import Carousel from '@/components/carousel';
 import { getPseudoRandomNumber } from '@/lib/utils';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const DevIcons = dynamic(() => import('@/components/dev-icons'), {
+  ssr: false,
+  loading: () => <Skeleton className='h-6 w-6 rounded-full' />,
+});
 
 export default function RootPage({ searchParams }: PageProps) {
   return (
@@ -73,6 +80,7 @@ export default function RootPage({ searchParams }: PageProps) {
         </div> */}
         </section>
       </main>
+      <DevIcons />
     </>
   );
 }

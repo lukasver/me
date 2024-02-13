@@ -56,11 +56,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <PlausibleProvider
             domain='lucasverdiell.xyz'
             enabled={process.env.NODE_ENV === 'production'}
+            scriptProps={{ defer: true }}
           />
-          <link
-            rel='stylesheet'
-            href='https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css'
-          />
+
           <noscript>
             <meta
               httpEquiv='refresh'
