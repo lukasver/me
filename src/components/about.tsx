@@ -2,6 +2,7 @@ function About() {
   return (
     <div className='flex flex-col gap-4 overflow-hidden'>
       <div className='flex-1 flex flex-col gap-2 p-2 [&>p>b]:text-primary font-sans justify-between'>
+        <h2>Curious web developer, transportations system professional</h2>
         <p>
           With 34 years of age and from Argentina, this professional stands as a{' '}
           <b>SR Fullstack Developer</b> boasting over 7 years of experience in

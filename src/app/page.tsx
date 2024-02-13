@@ -15,7 +15,7 @@ export default function RootPage({ searchParams }: PageProps) {
               <div className='flex flex-row justify-between gap-4 items-center'>
                 <div className='flex gap-2 flex-1 text-3xl md:text-5xl xl:text-5xl 2xl:text-8xl font-head overflow-hidden whitespace-nowrap'>
                   <span>Hi, I'm</span>
-                  <div className='w-max animate-typing overflow-hidden whitespace-nowrap border-r-4 text-primary'>
+                  <div className='w-max md:animate-typing overflow-hidden whitespace-nowrap border-r-4 text-primary'>
                     <h1>{siteConfig.name}</h1>
                   </div>
                 </div>
@@ -43,9 +43,9 @@ export default function RootPage({ searchParams }: PageProps) {
           className=' dark:bg-gradient-bottom grid place-content-center'
         >
           <Container>
-            <h3 className='animate-fade-in h-[1.15em] font-head sm:text-6xl text-3xl text-primary dark:text-gradient -mt-14 drop-shadow-4xl'>
+            <p className='animate-fade-in h-[1.15em] font-head sm:text-6xl text-3xl text-primary dark:text-gradient -mt-14 drop-shadow-4xl'>
               Coming soon!
-            </h3>
+            </p>
           </Container>
           {/* <div>
           <iframe

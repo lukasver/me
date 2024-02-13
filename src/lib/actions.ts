@@ -7,10 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 import { ContactForm } from './types';
 import { ContactEmailTemplate } from '@/components/templates/contact-form';
 
-const SENDER =
-  process.env.NODE_ENV === 'production'
-    ? 'Lucas Verdiell <hello@lucasverdiell.xyz>'
-    : 'onboarding@resend.dev';
+const SENDER = 'Lucas Verdiell <hello@lucasverdiell.xyz>';
 
 const RECEIVER =
   process.env.NODE_ENV === 'production'

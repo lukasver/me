@@ -30,18 +30,19 @@ function Carousel(props: { sources: Source[]; className?: string }) {
       <CarouselContent>
         {sources.map((el) => (
           <CarouselItem key={String(el.src)}>
-            <div>
+            <picture>
               <Card className='p-1'>
                 <CardContent className='flex !p-0 aspect-square h-full w-full'>
                   <Image
                     width={420}
                     height={420}
+                    priority={true}
                     {...el}
                     className='rounded-lg'
                   />
                 </CardContent>
               </Card>
-            </div>
+            </picture>
           </CarouselItem>
         ))}
       </CarouselContent>

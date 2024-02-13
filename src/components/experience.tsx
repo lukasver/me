@@ -10,7 +10,7 @@ function Experience() {
             <div className='flex flex-col gap-2'>
               <div className='flex flex-col lg:flex-row justify-between'>
                 <div className='flex flex-row gap-2 items-center'>
-                  <h3 className='font-bold font-head'>{exp.name}</h3>
+                  <p className='font-bold font-head'>{exp.name}</p>
                   <span className='text-secondary font-bold '>@</span>
                   <Link
                     href={exp.href}
