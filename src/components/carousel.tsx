@@ -37,6 +37,7 @@ function Carousel(props: { sources: Source[]; className?: string }) {
                     width={420}
                     height={420}
                     priority={true}
+                    sizes='420px'
                     {...el}
                     className='rounded-lg'
                   />

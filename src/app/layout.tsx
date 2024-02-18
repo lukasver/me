@@ -46,12 +46,13 @@ export const viewport: Viewport = {
 
 interface RootLayoutProps {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <>
-      <html lang='en' suppressHydrationWarning>
+      <html lang='en'>
         <head>
           <PlausibleProvider
             domain='lucasverdiell.xyz'
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <div className='relative flex min-h-screen flex-col'>
               <Layout>{children}</Layout>
             </div>
+            {modal}
             <Toaster />
             <TailwindIndicator />
           </ThemeProvider>

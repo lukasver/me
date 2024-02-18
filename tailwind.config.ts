@@ -164,7 +164,7 @@ const config: Config = {
         'fade-in': 'fade-in 1s ease-in',
         'fade-in-2': 'fade-in 2s ease-in',
         'fade-in-3': 'fade-in 3s ease-in',
-        typing: 'typing 2s steps(20) 5 alternate, blink 1s 8',
+        typing: 'typing 2s steps(16) 5 alternate, blink 1s 8',
       },
     },
   },

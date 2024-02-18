@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { Separator } from './ui/separator';
 
-function Experience() {
+function Experience({ data = experience }) {
   return (
     <div className='flex flex-col gap-2 justify-between w-full'>
-      {experience.map((exp, index) => {
+      {data.map((exp, index) => {
         return (
           <>
             <div className='flex flex-col gap-2'>
@@ -53,7 +53,7 @@ const experience = [
   },
   {
     name: 'Professor / Trainer',
-    company: 'UCEL - Universidad del Centro Educativo Latinoamericano.',
+    company: 'UCEL - Universidad del Centro Educativo Latinoamericano',
     date: 'March 2017 - September 2022',
     description:
       'Transportation systems professor / Amadeus GDS Trainer - 🇦🇷 University.',

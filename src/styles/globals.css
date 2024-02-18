@@ -7,7 +7,7 @@
     --background: 220 14% 96%%;
     --foreground: 240 10% 3.9%;
 
-    --card: 0 0% 100%;
+    --card: 240 33% 97%;
     --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
@@ -153,6 +153,5 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-    background-color: transparent;
   }
 }
