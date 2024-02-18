@@ -52,20 +52,20 @@ const experience = [
     href: 'https://soyhenry.com',
   },
   {
-    name: 'Airport Passenger service supervisor',
-    company: 'LATAM Airlines Group',
-    date: 'November 2013 - August 2020',
-    description:
-      'Airport supervisor. Rosario International Airport, Argentina. - 🇦🇷🇨🇱🇧🇷 Airline megacarrier.\nIn charge of airpor procedures and trainings.',
-    href: 'https://latam.com',
-  },
-  {
     name: 'Professor / Trainer',
     company: 'UCEL - Universidad del Centro Educativo Latinoamericano.',
     date: 'March 2017 - September 2022',
     description:
       'Transportation systems professor / Amadeus GDS Trainer - 🇦🇷 University.',
     href: 'https://ucel.edu.ar',
+  },
+  {
+    name: 'Airport passenger service supervisor',
+    company: 'LATAM Airlines Group',
+    date: 'November 2013 - August 2020',
+    description:
+      'Airport supervisor. Rosario International Airport, Argentina. - 🇦🇷🇨🇱🇧🇷 Airline megacarrier.\nIn charge of airpor procedures and trainings.',
+    href: 'https://latam.com',
   },
 ];
 

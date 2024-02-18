@@ -52,3 +52,13 @@ export const fireToast = (
     ...options,
   });
 };
+
+export const shallowPush = ({
+  pathname,
+  params,
+}: {
+  pathname: string;
+  params: URLSearchParams;
+}): void => {
+  window.history.pushState({}, '', `${pathname}?${params.toString()}`);
+};

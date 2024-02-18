@@ -6,6 +6,7 @@ import Carousel from '@/components/carousel';
 import { getPseudoRandomNumber } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
+import Projects from '@/components/projects';
 
 const DevIcons = dynamic(() => import('@/components/dev-icons'), {
   ssr: false,
@@ -15,7 +16,7 @@ const DevIcons = dynamic(() => import('@/components/dev-icons'), {
 export default function RootPage({ searchParams }: PageProps) {
   return (
     <>
-      <main className='min-h-screen h-[unset] md:h-screen snap-y snap-mandatory overflow-y-scroll'>
+      <main className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>
         <section id='hero' className='dark:bg-gradient h-full'>
           <Container className='flex flex-col gap-4 xl:gap-8 2xl:gap-20 xl:-mt-20 2xl:-mt-40 px-4 mt-4 sm:mt-0'>
             <div className='flex justify-center lg:justify-normal'>
@@ -47,12 +48,10 @@ export default function RootPage({ searchParams }: PageProps) {
         </section>
         <section
           id={'projects'}
-          className=' dark:bg-gradient-bottom grid place-content-center'
+          className='min-h-full h-fit dark:bg-gradient-bottom grid place-content-center xl:place-content-stretch pt-[140px] xl:pt-[80px] 2xl:pt-0'
         >
-          <Container>
-            <p className='animate-fade-in h-[1.15em] font-head sm:text-6xl text-3xl text-primary dark:text-gradient -mt-14 drop-shadow-4xl'>
-              Coming soon!
-            </p>
+          <Container className='w-full xl:w-[75%]'>
+            <Projects />
           </Container>
           {/* <div>
           <iframe

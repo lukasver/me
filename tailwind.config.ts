@@ -18,6 +18,9 @@ const config: Config = {
       },
     },
     extend: {
+      listStyleType: {
+        emoji: '✅',
+      },
       dropShadow: {
         '2xl': '0 25px 25px hsl(237, 26%, 39%)',
         '3xl': '0 35px 35px hsl(236, 24%, 27%)',

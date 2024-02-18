@@ -7,7 +7,7 @@ import Stack from './stack';
 import Experience from './experience';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, shallowPush } from '@/lib/utils';
 
 const tabs = [
   { name: 'about', label: 'About', content: About },
@@ -24,7 +24,7 @@ function HomeTabs({ tab = 'about' }: { tab?: string }) {
   const onTabChange = (value: string) => {
     const params = new URLSearchParams();
     params.set('tab', value);
-    push(pathname + `?${params.toString()}`, { scroll: false });
+    shallowPush({ pathname, params });
   };
 
   useEffect(() => {
