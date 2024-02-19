@@ -35,6 +35,7 @@ export const metadata: Metadata = {
     images: '/og-image.png',
     title: siteConfig.name,
     description: siteConfig.description,
+    url: 'https://lucasverdiell.xyz',
   },
 };
 
