@@ -47,7 +47,6 @@ const tabs = [
 ] as const;
 
 function HomeTabs({ tab = 'about' }: { tab?: string }) {
-  const { push } = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const onTabChange = (value: string) => {
@@ -71,7 +70,7 @@ function HomeTabs({ tab = 'about' }: { tab?: string }) {
         tab === 'about' && 'overflow-hidden'
       )}
     >
-      <TabsList>
+      <TabsList className='max-w-[320px] sm:max-w-none overflow-x-scroll justify-start sm:justify-center'>
         {tabs.map(({ name, label }) => (
           <TabsTrigger key={name} value={name}>
             {label}

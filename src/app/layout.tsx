@@ -6,10 +6,11 @@ import { siteConfig } from '@/config/site';
 import { head, hand, sans, cn } from '@/lib/utils';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
-import PlausibleProvider from 'next-plausible';
+
 import { Layout } from '@/components/layout';
 
 import { Toaster } from '@/components/ui/sonner';
+import Analytics from '@/components/analytics';
 
 export const metadata: Metadata = {
   title: {
@@ -54,12 +55,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
     <>
       <html lang='en'>
         <head>
-          <PlausibleProvider
-            domain='lucasverdiell.xyz'
-            enabled={process.env.NODE_ENV === 'production'}
-            scriptProps={{ defer: true }}
-          />
-
+          <Analytics />
           <noscript>
             <meta
               httpEquiv='refresh'
