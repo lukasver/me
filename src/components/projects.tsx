@@ -340,6 +340,11 @@ const LatamComponent: React.FC<unknown> = () => {
           improvement.
         </p>
         <p>
+          In charge of procedures and trainings (ICPT), coordinating
+          certification, courses, & revalidations for the airline's airport
+          staff.
+        </p>
+        <p>
           Was awarded with a{' '}
           <Link
             className={'font-bold text-secondary'}
@@ -353,9 +358,11 @@ const LatamComponent: React.FC<unknown> = () => {
       <h3 className='font-head text-secondary mt-2'>Progression:</h3>
       <Separator />
       <div className='mt-2 font-head font-bold flex flex-row gap-2 items-center'>
-        <p>Teaching assistant</p>
+        <p>Passenger Service Lead</p>
         <Icons.chevronRight className='size-5 text-secondary' />
-        <p>Fullstack developer</p>
+        <p>ICPT</p>
+        <Icons.chevronRight className='size-5 text-secondary' />
+        <p>Airport supervisor</p>
       </div>
     </div>
   );
