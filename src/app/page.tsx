@@ -19,7 +19,7 @@ export default function RootPage({ searchParams }: PageProps) {
       <main className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>
         <section id='hero' className='dark:bg-gradient h-full'>
           <Container className='flex flex-col gap-4 xl:gap-8 2xl:gap-20 xl:-mt-20 2xl:-mt-40 px-4 mt-4 sm:mt-0'>
-            <div className='flex justify-center lg:justify-normal'>
+            <div className='flex justify-center lg:justify-normal items-center'>
               <div className='flex flex-row justify-between gap-4 items-center'>
                 <div className='flex gap-2 flex-1 text-3xl md:text-5xl xl:text-5xl 2xl:text-8xl font-head overflow-hidden whitespace-nowrap'>
                   <span>Hi, I'm</span>
