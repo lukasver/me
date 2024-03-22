@@ -7,11 +7,10 @@ import { Button } from './ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { ContactForm } from '@/lib/types';
-import { postContactForm } from '@/lib/actions';
 
 function Contact() {
   const [loading, setLoading] = useState(false);
-  const form = useForm({
+  const form = useForm<ContactForm>({
     resolver: zodResolver(ContactForm),
     defaultValues: {
       email: '',
@@ -23,16 +22,25 @@ function Contact() {
   const onSubmit: SubmitHandler<ContactForm> = async (formData) => {
     try {
       setLoading(true);
-      const submited = await postContactForm(formData);
-      if (submited) {
+      const submited = await fetch('/api/emails/send', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((r) => r.json());
+      if (submited.success) {
         form.reset();
         fireToast(
           'Contact sent 🎉',
           "Thank you for getting in touch. I'll get back ASAP! ",
           'success'
         );
+      } else {
+        fireToast('Error sending contact form', submited?.message, 'error');
       }
     } catch (e) {
+      console.debug('~ error:', e);
     } finally {
       setLoading(false);
     }
@@ -61,6 +69,12 @@ function Contact() {
         >
           Submit
         </Button>
+        <p className='text-sm text-center text-gray-500'>
+          or reach out to me at{' '}
+          <a className='text-primary' href='mailto:hello@lucasverdiell.xyz'>
+            hello@lucasverdiell.xyz
+          </a>
+        </p>
       </form>
     </Form>
   );
