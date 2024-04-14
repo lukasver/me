@@ -7,8 +7,6 @@ import { getPseudoRandomNumber } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import Projects from '@/components/projects';
-import React from 'react';
-import Image from 'next/image';
 import { getBase64 } from '@/lib/plaiceholder';
 
 const DevIcons = dynamic(() => import('@/components/dev-icons'), {

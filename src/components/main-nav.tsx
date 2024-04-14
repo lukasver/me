@@ -22,16 +22,19 @@ export function MainNav({ items }: MainNavProps) {
   return (
     <div className='flex gap-6 md:gap-10 animate-fade-in'>
       <Image
+        placeholder='blur'
         priority={true}
         src={memoji}
         alt={'Lucas Memoji'}
         height={50}
         width={50}
-        className='md:hidden'
+        className='md:hidden animate-fade-in-2'
       />
       <Link href='/#hero' className='hidden items-center space-x-2 md:flex'>
         <Image
           priority={true}
+          placeholder='blur'
+          className='animate-fade-in-2'
           src={memoji}
           alt={'Lucas Memoji'}
           height={50}

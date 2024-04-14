@@ -5,7 +5,7 @@ import Contact from './contact';
 import { Separator } from './ui/separator';
 import Stack from './stack';
 import Experience from './experience';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { cn, shallowPush } from '@/lib/utils';
 

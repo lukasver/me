@@ -24,7 +24,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getPseudoRandomNumber = (() => {
-  let available = {} as Record<number, boolean>;
+  const available = {} as Record<number, boolean>;
   return (length: number = 5): number | undefined => {
     if (Object.keys(available).length === 0) {
       for (let i = 1; i <= length; i++) {
