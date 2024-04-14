@@ -17,6 +17,7 @@ export function SiteHeader() {
               href={siteConfig.links.github}
               target='_blank'
               rel='noreferrer'
+              className='animate-fade-in'
             >
               <div
                 className={buttonVariants({
@@ -32,6 +33,7 @@ export function SiteHeader() {
               href={siteConfig.links.twitter}
               target='_blank'
               rel='noreferrer'
+              className='animate-fade-in-2'
             >
               <div
                 className={buttonVariants({

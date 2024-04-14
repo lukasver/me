@@ -12,6 +12,9 @@ import { cn } from '@/lib/utils';
 
 interface Source extends React.ComponentProps<typeof Image> {}
 
+/**
+ * For dev only
+ */
 const getRandomPicture = () => {
   return (
     'https://picsum.photos/420/420' +
@@ -26,7 +29,9 @@ function Carousel(props: { sources: Source[]; className?: string }) {
       src: getRandomPicture(),
     });
   return (
-    <CarouselUi className={cn(props.className, 'w-full max-w-full')}>
+    <CarouselUi
+      className={cn(props.className, 'w-full max-w-full animate-fade-in')}
+    >
       <CarouselContent>
         {sources.map((el) => (
           <CarouselItem key={String(el.src)}>
@@ -38,6 +43,7 @@ function Carousel(props: { sources: Source[]; className?: string }) {
                     height={420}
                     priority={true}
                     sizes='420px'
+                    placeholder='blur'
                     {...el}
                     className='rounded-lg'
                   />

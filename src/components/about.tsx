@@ -1,6 +1,6 @@
 function About() {
   return (
-    <div className='flex flex-1 flex-col gap-4 overflow-hidden min-h-[330px]'>
+    <div className='flex flex-1 flex-col gap-4 overflow-hidden min-h-[330px] animate-fade-in'>
       <div className='flex-1 flex flex-col gap-2 p-2 [&>*>b]:text-primary [&>h2]:font-head justify-center'>
         <h2 className={'text-sm sm:text-base'}>
           Curious traveller, <b>fullstack developer</b>,{' '}

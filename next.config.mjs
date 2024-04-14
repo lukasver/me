@@ -1,4 +1,5 @@
-const withMDX = require('@next/mdx')();
+import withMDX from '@next/mdx';
+import withPlaiceholder from '@plaiceholder/next';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -30,4 +31,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withMDX(nextConfig);
+export default withPlaiceholder(withMDX(nextConfig));

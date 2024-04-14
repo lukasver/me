@@ -3,7 +3,7 @@ import { Separator } from './ui/separator';
 
 function Experience({ data = experience }) {
   return (
-    <div className='flex flex-col gap-2 justify-between w-full'>
+    <div className='flex flex-col gap-2 justify-between w-full animate-fade-in'>
       {data.map((exp, index) => {
         return (
           <>

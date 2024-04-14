@@ -20,7 +20,7 @@ interface MainNavProps {
 
 export function MainNav({ items }: MainNavProps) {
   return (
-    <div className='flex gap-6 md:gap-10'>
+    <div className='flex gap-6 md:gap-10 animate-fade-in'>
       <Image
         priority={true}
         src={memoji}

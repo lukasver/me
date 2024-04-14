@@ -50,7 +50,7 @@ function Contact() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='w-full h-full min-h-[330px] flex flex-col gap-2 justify-between'
+        className='w-full h-full min-h-[330px] flex flex-col gap-2 justify-between animate-fade-in'
       >
         {INPUTS.map((input, index) => (
           <InputsWrapper

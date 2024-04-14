@@ -65,6 +65,12 @@ const SmatContent: React.FC<unknown> = () => {
       <h3 className='font-head text-secondary'>Achievements:</h3>
       <Separator />
       <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+        <li>
+          In charge of coordinating a team of 4 backend and frontend developers
+          to carry out implementations considering requests from founders &
+          feedback from users, working with AGILE practices & iterations
+          ensuring high quality deliverables.{' '}
+        </li>
         <li className='mt-2'>
           Successfully refactored whole frontend app from Javascript with
           vanilla{' '}
@@ -91,34 +97,35 @@ const SmatContent: React.FC<unknown> = () => {
         </li>
         <li>
           Planned and contributing in the creation of the company's data
-          warehouse using
+          warehouse using{' '}
           <a
             href={'https://cloud.google.com/storage'}
             rel='noopener nofollow noreferer'
           >
             Cloud Storage
-          </a>{' '}
-          ,
+          </a>
+          ,{' '}
           <a
             href={'https://cloud.google.com/functions'}
             rel='noopener nofollow noreferer'
           >
-            Cloud functions,
-          </a>{' '}
+            Cloud functions
+          </a>
+          ,{' '}
           <a
             href={'https://cloud.google.com/bigquery'}
             rel='noopener nofollow noreferer'
           >
             BigQuery
-          </a>{' '}
-          ,
+          </a>
+          ,{' '}
           <a
             href={'https://cloud.google.com/looker'}
             rel='noopener nofollow noreferer'
           >
             Looker Studio
           </a>{' '}
-          &
+          &{' '}
           <a
             href={'https://analytics.google.com/'}
             rel='noopener nofollow noreferer'
@@ -163,7 +170,7 @@ const SmatContent: React.FC<unknown> = () => {
             href={'https://cloud.google.com'}
             rel='noopener nofollow noreferer'
           >
-            Google cloud
+            Google Cloud
           </a>{' '}
           with different environments.
         </li>
@@ -172,7 +179,7 @@ const SmatContent: React.FC<unknown> = () => {
             href={'https://cloud.google.com'}
             rel='noopener nofollow noreferer'
           >
-            Google cloud
+            Google Cloud
           </a>{' '}
           & IAM admin.
         </li>
@@ -211,10 +218,6 @@ const SmatContent: React.FC<unknown> = () => {
           projects.
         </li>
         <li>
-          Coordinated backend and frontend teams to carry out new
-          implementations considering requests from founders & users.{' '}
-        </li>
-        <li>
           Planned, developed & deployed an ICO dashboard for creating token pre
           sales. Used{' '}
           <a
@@ -232,6 +235,17 @@ const SmatContent: React.FC<unknown> = () => {
             Smat token dashboard
           </a>{' '}
           .
+        </li>
+        <li>
+          Implemented an AI chat system that bases its responses from a LLM
+          model with feeded context from custom document files using
+          <a href={'https://openai.com/'} rel='noopener nofollow'>
+            OpenAI
+          </a>{' '}
+          &{' '}
+          <a href={'https://llamaindex.ai'} rel='noopener nofollow'>
+            Llamaindex
+          </a>
         </li>
       </ul>
       <h3 className='font-head text-secondary mt-2'>Progression:</h3>
