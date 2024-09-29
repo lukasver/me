@@ -9,7 +9,6 @@
     "noEmit": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "composite": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
