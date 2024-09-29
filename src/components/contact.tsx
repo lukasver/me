@@ -22,7 +22,7 @@ function Contact() {
   const onSubmit: SubmitHandler<ContactForm> = async (formData) => {
     try {
       setLoading(true);
-      const submited = await fetch('/api/emails/send', {
+      const submited: any = await fetch('/api/emails/send', {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {

@@ -15,19 +15,19 @@ const MetadataSchema = z.object({
 export type Metadata = z.infer<typeof MetadataSchema>;
 
 function parseFrontmatter(fileContent: string) {
-  let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  let match = frontmatterRegex.exec(fileContent);
-  let frontMatterBlock = match![1];
-  let content = fileContent.replace(frontmatterRegex, '').trim();
-  let frontMatterLines = frontMatterBlock.trim().split('\n');
-  let metadata = {} as Metadata;
+  const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
+  const match = frontmatterRegex.exec(fileContent);
+  const frontMatterBlock = match![1];
+  const content = fileContent.replace(frontmatterRegex, '').trim();
+  const frontMatterLines = frontMatterBlock.trim().split('\n');
+  const metadata = {} as Metadata;
 
   frontMatterLines.forEach((line) => {
-    let [key, ...valueArr] = line.split(': ');
+    const [key, ...valueArr] = line.split(': ');
     let value: string | string[] | boolean = valueArr.join(': ').trim();
     value = value.replace(/^['"](.*)['"]$/, '$1'); // Remove quotes
 
-    let trimmed = key.trim() as keyof Metadata;
+    const trimmed = key.trim() as keyof Metadata;
     if (value?.startsWith("['") && value?.endsWith("']")) {
       value = JSON.parse(value.replaceAll("'", '"')) as string[]; // Parse JSON string to array
     } else if (value === 'true' || value === 'false') {
@@ -46,15 +46,15 @@ function getMDXFiles(dir: string) {
 }
 
 function readMDXFile(filePath: string) {
-  let rawContent = fs.readFileSync(filePath, 'utf-8');
+  const rawContent = fs.readFileSync(filePath, 'utf-8');
   return parseFrontmatter(rawContent);
 }
 
 function getMDXData(dir: string) {
-  let mdxFiles = getMDXFiles(dir);
+  const mdxFiles = getMDXFiles(dir);
   return mdxFiles.map((file) => {
-    let { metadata, content } = readMDXFile(path.join(dir, file));
-    let slug = path.basename(file, path.extname(file));
+    const { metadata, content } = readMDXFile(path.join(dir, file));
+    const slug = path.basename(file, path.extname(file));
 
     return {
       metadata,
@@ -76,15 +76,15 @@ export const getTags = (posts: ReturnType<typeof getBlogPosts>) => {
 };
 
 export function formatDate(date: string, includeRelative = false) {
-  let currentDate = new Date();
+  const currentDate = new Date();
   if (!date.includes('T')) {
     date = `${date}T00:00:00`;
   }
-  let targetDate = new Date(date);
+  const targetDate = new Date(date);
 
-  let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  let monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  let daysAgo = currentDate.getDate() - targetDate.getDate();
+  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+  const daysAgo = currentDate.getDate() - targetDate.getDate();
 
   let formattedDate = '';
 
@@ -98,7 +98,7 @@ export function formatDate(date: string, includeRelative = false) {
     formattedDate = 'Today';
   }
 
-  let fullDate = targetDate.toLocaleString('en-us', {
+  const fullDate = targetDate.toLocaleString('en-us', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',

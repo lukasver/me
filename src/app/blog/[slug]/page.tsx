@@ -16,7 +16,7 @@ import readingTime from 'reading-time';
 const baseUrl = DOMAIN;
 
 export async function generateStaticParams() {
-  let posts = getBlogPosts();
+  const posts = getBlogPosts();
 
   return posts.map((post) => ({
     slug: post.slug,
@@ -24,18 +24,18 @@ export async function generateStaticParams() {
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug);
+  const post = getBlogPosts().find((post) => post.slug === params.slug);
   if (!post) {
     return {};
   }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
     image,
   } = post.metadata;
-  let ogImage = image
+  const ogImage = image
     ? image
     : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
 
@@ -68,7 +68,7 @@ export default async function Blog({ params }: PageProps<{ slug: string }>) {
     notFound();
   }
 
-  let post = await getBlogPosts().find((post) => post.slug === params.slug);
+  const post = await getBlogPosts().find((post) => post.slug === params.slug);
 
   if (!post) {
     notFound();
@@ -101,7 +101,7 @@ export default async function Blog({ params }: PageProps<{ slug: string }>) {
         }}
       />
       <main className='max-w-3xl relative py-6 lg:grid lg:grid-cols-[1fr_300px] lg:gap-10 lg:py-10 xl:gap-20'>
-        <div className='space-y-4 px-6'>
+        <div className='space-y-4 px-6 '>
           <DocsPageHeader
             metadata={post.metadata}
             readingTime={readingTime(post.content)?.minutes}

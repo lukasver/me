@@ -3,9 +3,10 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { Items } from '@/lib/toc';
 
 interface TocProps {
-  toc: any;
+  toc: Items;
 }
 
 export function useMounted() {
@@ -89,7 +90,7 @@ function useActiveItem(itemIds: (string | undefined)[]) {
 }
 
 interface TreeProps {
-  tree: any;
+  tree: Items;
   level?: number;
   activeItem?: string | null;
 }

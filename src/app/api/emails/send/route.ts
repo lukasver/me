@@ -8,7 +8,7 @@ export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
-  const formData: ContactForm = await req.json();
+  const formData = (await req.json()) as ContactForm;
 
   try {
     const html = await renderAsync(
@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
       }),
     });
     if (res.ok) {
-      const data = await res.json();
+      const data: any = await res.json();
       return NextResponse.json({ ...data, success: true });
     }
 
-    const response = await res.json();
+    const response: any = await res.json();
     return NextResponse.json({ success: false, ...response });
   } catch (e) {
     return NextResponse.json({

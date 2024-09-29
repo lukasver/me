@@ -1,5 +1,3 @@
-import Container from '@/components/container';
-import { AnimatedList } from '@/components/ui/animated-list';
 import { Badge } from '@/components/ui/badge';
 import { Marquee } from '@/components/ui/marquee';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -8,7 +6,6 @@ import { DateTime } from 'luxon';
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import React from 'react';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -57,7 +54,10 @@ async function BlogPage() {
                       </time>
                       <div className='text-xs truncate gap-2 flex'>
                         {post?.metadata?.tags?.map((tag) => (
-                          <span className='hover:text-primary text-muted-foreground capitalize'>
+                          <span
+                            key={tag}
+                            className='hover:text-primary text-muted-foreground capitalize'
+                          >
                             {tag}
                           </span>
                         ))}
