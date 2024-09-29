@@ -6,6 +6,7 @@ import { siteConfig } from '@/config/site';
 import { head, hand, sans, cn } from '@/lib/utils';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
+import { ViewTransitions } from 'next-view-transitions';
 
 import { Layout } from '@/components/layout';
 
@@ -53,8 +54,8 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
-    <>
-      <html lang='en'>
+    <ViewTransitions>
+      <html lang='en' suppressHydrationWarning>
         <head>
           <Analytics />
           <noscript>
@@ -82,6 +83,6 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
           </ThemeProvider>
         </body>
       </html>
-    </>
+    </ViewTransitions>
   );
 }

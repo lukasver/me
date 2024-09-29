@@ -1,0 +1,143 @@
+---
+title: Authenticating to Github NPM Private Repository
+summary: Learn how to authenticate and install private NPM packages from Github Packages for both local development and CI/CD pipelines.
+image:
+publishedAt: '2024-09-29'
+tags: ['markdown', 'github', 'packages', 'npm']
+draft: false
+authors: ['Lucas Verdiell']
+---
+
+## Authenticating to Github NPM Private Repository
+
+A package is a piece of code that is aimed to be reused in different
+applications/repos. Normally, JS packages are published in the NPM registry
+(Node Package Manager) so developers can find, inspect, and use other people's
+packages. This is cool if you want a public package to be published; however, if
+you want it to be private, NPM offers a paid solution. There are other ways to
+reuse code in other projects without having to copy/paste and maintain code in
+different places (NOT COOL at all!), which are: **Git submodules** and **NPM
+workspaces**. Both have slightly different use cases and implementations with
+their pros and cons.
+
+In this post, i've chosen to explore
+[Github packages](https://github.com/features/packages) due to its simplicity
+to integrate with Github ACtions workflows. But how does this work?
+
+Let's say you have published a private, reusable package in your **acme** organization with
+types and utils that need to be reused in different repositories:
+**@acme/commons**. To use this package,
+you would simply need to run `npm install @acme/commons` in your console like you
+would install any other public package. However, there is a catch. Since the
+package is hosted inside Github's private NPM repository, we need to be an
+authenticated and authorized user from the **acme** organization (scope).
+
+### Local development
+
+Ok, now you would like you and your team to be able to install your organization
+package locally like you would do with any npm package.
+how can you do so? Follow these steps:
+
+1. Go to your personal [Github account](https://github.com/settings/tokens)
+   settings page and create a Personal Access Token (PAT) with only the
+   `packages: read` scope and desired expiration.
+2. Create a `.npmrc` file in the root of your local repository (This file should
+   not be pushed to the remote Github repo, so should be added to .gitignore).
+3. Put the following content inside the file:
+
+```
+ @acme:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=<REPLACE WITH YOUR PAT TOKEN FROM STEP 1>
+```
+
+4. Run `npm install @acme/commons`, and voilà!
+
+### Authenticate on Github Actions (CI)
+
+The previous approach should work for your local development, but if you cannot
+push the `.npmrc` file to the source code, how can you authorize the different
+build runners to allow downloading this package? Well, while there can be
+several different approaches to do this, we have added the complexity of creating
+builds from Github Actions (CI/CD) using Docker to generate the images that will
+later be used to run the apps. This means that we need to authenticate the
+Docker build process for the private NPM registry, and we do this by using the
+`GITHUB_TOKEN` environment variable that is exposed into the Github Actions
+runner instead of your own PAT. Be careful not to expose the token in this
+process, so we should do this in a safe way.
+
+1. The package should explicitly
+   [authorize](https://github.com/orgs/acme/packages/npm/types/settings)
+   other repositories that will be accessing it via Github Actions.
+2. Then we need to add `packages: read` permission in the workflow to request a
+   GITHUB_TOKEN with the right permission to install the package & add a new
+   `registry-url` setting into the node setup step.
+3. After that, we need to feed the `.npmrc` file or `GITHUB_TOKEN` to the
+   Dockerfile. Depending on the approach taken, the Dockerfile should be amended
+   accordingly; here is an example:
+
+```yml
+# workflow.yml
+
+name: Build & Deploy
+on:
+  push:
+    branches: [stage]
+jobs:
+  build-stage:
+    permissions:
+      contents: "read"
+      packages: "read" ## <--- This is important
+      id-token: "write"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.3.0
+          registry-url: https://npm.pkg.github.com/ ## <--- This is important
+
+{... other steps ...}
+
+# Create the .npmrc file with the token in the runner to feed it directly to the Dockerfile
+      - name: Create .npmrc file
+        run: |
+          echo '@acme:registry=https://npm.pkg.github.com' > .npmrc
+          echo '//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}' >> .npmrc
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: "europe-north1-docker.pkg.dev/<GCP_PROJECT_ID>/<CONTAINER_FOLDER>/stage:latest"
+          file: "./Dockerfile"
+          secret-files: |
+            "npmrc=${{ github.workspace }}/.npmrc" ## <-- This passes the file as a secret-file to be used inside the dockerfile as secret
+
+```
+
+4. Lastly, amend the Dockerfile to pick this .npmrc and set it as the default
+   authentication to be used inside the container during the build process.
+   Apparently, the secret needs to be passed inline with the `npm ci/install`
+   command; otherwise, Docker uses the default runner 🫠.
+
+```dockerfile
+# Dockerfile
+FROM node:20.3.0-alpine AS base
+RUN apk add --no-cache libc6-compat
+WORKDIR /usr/app
+
+# Install dependencies based on the preferred package manager
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* bun.lockb* ./
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci --omit=dev ## <--- by overwriting the .npmrc in the /root/ folder, docker uses our new .npmrc data
+
+```
+
+And that's it; your private package should be installed correctly, and the build
+should succeed now!
+
+##### References
+
+- [Docker and private modules](https://docs.npmjs.com/docker-and-private-modules)
+- [Quickstart with Github Packages](https://docs.github.com/es/packages/quickstart)
+
+Author: [**Lucas Verdiell**](https://github.com/lukasver)

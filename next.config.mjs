@@ -1,10 +1,8 @@
-import withMDX from '@next/mdx';
 import withPlaiceholder from '@plaiceholder/next';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'picsum.photos', port: '' },
@@ -31,4 +29,4 @@ const nextConfig = {
   },
 };
 
-export default withPlaiceholder(withMDX(nextConfig));
+export default withPlaiceholder(nextConfig);

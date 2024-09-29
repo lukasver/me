@@ -6,8 +6,8 @@ import Cal, { getCalApi } from '@calcom/embed-react';
 function CalComponent() {
   useEffect(() => {
     (async function () {
-      const cal = await getCalApi();
-      cal.ns?.['15min']?.('ui', {
+      const cal = await getCalApi({ namespace: '15min' });
+      cal?.('ui', {
         styles: { branding: { brandColor: '#3d3f67' } },
         hideEventTypeDetails: false,
         layout: 'month_view',

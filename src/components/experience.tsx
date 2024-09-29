@@ -7,7 +7,7 @@ function Experience({ data = experience }) {
       {data.map((exp, index) => {
         return (
           <>
-            <div className='flex flex-col gap-2'>
+            <div className='flex flex-col gap-2' key={exp.company}>
               <div className='flex flex-col lg:flex-row justify-between'>
                 <div className='flex flex-row gap-2 items-center'>
                   <p className='font-bold font-head'>{exp.name}</p>

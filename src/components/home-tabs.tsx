@@ -49,6 +49,7 @@ const tabs = [
 function HomeTabs({ tab = 'about' }: { tab?: string }) {
   const pathname = usePathname();
   const params = useSearchParams();
+
   const onTabChange = (value: string) => {
     const params = new URLSearchParams();
     params.set('tab', value);
@@ -61,6 +62,7 @@ function HomeTabs({ tab = 'about' }: { tab?: string }) {
       onTabChange(params.get('tab') || 'about');
     }
   }, []);
+
   return (
     <Tabs
       onValueChange={onTabChange}

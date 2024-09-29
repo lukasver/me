@@ -3,7 +3,7 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
   name: 'Lucas Verdiell',
   description:
-    'IT & transportation systems professional from Argentina, currently based in Portugal.',
+    'Fullstack cloud developer from Argentina, currently based in Portugal. IT & Transportation Systems Professional.',
   mainNav: [
     {
       title: 'Projects',
