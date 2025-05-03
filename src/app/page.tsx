@@ -2,10 +2,13 @@ import Container from '@/components/container';
 import HomeTabs from '@/components/home-tabs';
 import { PageProps } from '@/types';
 import { siteConfig } from '@/config/site';
-import { CldImage } from 'next-cloudinary';
+
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import Projects from '@/components/projects';
+import OptimizedImage from '@/components/image';
+import { cn } from '@/lib/utils';
+import { Card, CardContent } from '@/components/ui/card';
 
 const DevIcons = dynamic(() => import('@/components/dev-icons'), {
   // ssr: false,
@@ -48,14 +51,24 @@ export default async function RootPage(props: PageProps) {
               </div>
             </div>
             <div className='flex flex-col lg:flex-row items-stretch justify-center gap-2 xl:gap-10 animate-fade-in-2'>
-              <div className='grow-0 shrink-0 sm:basis-[420px] sm:max-w-[420px] self-center aspect-square'>
-                <CldImage
-                  width='640'
-                  height='640'
-                  src='lucas-ghibli'
-                  sizes='100vw'
-                  alt='Lucas profile picture'
-                />
+              <div className='grow-0 shrink-0 sm:basis-[420px] sm:max-w-[420px] self-center'>
+                <picture>
+                  <Card className='p-1'>
+                    <CardContent className='flex !p-0 aspect-square h-full w-full'>
+                      <OptimizedImage
+                        width={420}
+                        height={420}
+                        src='lucas-ghibli'
+                        sizes='420px'
+                        alt='Lucas profile picture'
+                        priority
+                        className={cn(
+                          'w-full max-w-full animate-fade-in rounded-lg'
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+                </picture>
               </div>
               <div className='flex grow animate-fade-in-3'>
                 <HomeTabs tab={searchParams.tab && String(searchParams.tab)} />

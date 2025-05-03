@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -9,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/private/'],
       },
     ],
-    sitemap: 'https://lucasverdiell.xyz/sitemap.xml',
+    sitemap: `${env.NEXT_PUBLIC_DOMAIN}/sitemap.xml`,
   };
 }

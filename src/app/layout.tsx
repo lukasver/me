@@ -13,6 +13,7 @@ import { Layout } from '@/components/layout';
 import { Toaster } from '@/components/ui/sonner';
 import Analytics from '@/components/analytics';
 import Head from 'next/head';
+import { env } from '@/env';
 
 export const metadata: Metadata = {
   title: {
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
 
-  metadataBase: new URL('https://lucasverdiell.xyz'),
+  metadataBase: new URL(env.NEXT_PUBLIC_DOMAIN),
 
   alternates: {
     canonical: '/',
@@ -42,8 +43,8 @@ export const metadata: Metadata = {
     images: '/og-image.png',
     title: siteConfig.name,
     description: siteConfig.description,
-    url: 'https://lucasverdiell.xyz',
-  }
+    url: env.NEXT_PUBLIC_DOMAIN,
+  },
 };
 
 export const viewport: Viewport = {
@@ -60,17 +61,17 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
-    <ViewTransitions>
-      <html lang='en' suppressHydrationWarning>
-        <Head>
-          <Analytics />
-          <noscript>
-            <meta
-              httpEquiv='refresh'
-              content="0; URL='https://www.youtube.com/watch?v=dQw4w9WgXcQ'"
-            />
-          </noscript>
-        </Head>
+    <html lang='en' suppressHydrationWarning>
+      <Head>
+        <Analytics />
+        <noscript>
+          <meta
+            httpEquiv='refresh'
+            content="0; URL='https://www.youtube.com/watch?v=dQw4w9WgXcQ'"
+          />
+        </noscript>
+      </Head>
+      <ViewTransitions>
         <body
           className={cn(
             'min-h-screen bg-background font-sans antialiased',
@@ -88,7 +89,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
             <TailwindIndicator />
           </ThemeProvider>
         </body>
-      </html>
-    </ViewTransitions>
+      </ViewTransitions>
+    </html>
   );
 }

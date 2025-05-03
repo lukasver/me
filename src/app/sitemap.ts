@@ -1,7 +1,8 @@
 import { getBlogPosts } from '@/lib/mdx';
 import { MetadataRoute } from 'next';
+import { env } from '@/env';
 
-export const DOMAIN = 'https://lucasverdiell.xyz';
+export const DOMAIN = env.NEXT_PUBLIC_DOMAIN;
 
 const routes = [
   {

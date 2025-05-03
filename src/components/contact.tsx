@@ -1,4 +1,5 @@
 'use client';
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Form } from './ui/form';
 import InputsWrapper, { INPUTS_TYPES } from './generic-input';
