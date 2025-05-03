@@ -30,7 +30,8 @@ const DevIcons = dynamic(() => import('@/components/dev-icons'), {
 //   });
 // };
 
-export default async function RootPage({ searchParams }: PageProps) {
+export default async function RootPage(props: PageProps) {
+  const searchParams = await props.searchParams;
   return (
     <>
       <main className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>

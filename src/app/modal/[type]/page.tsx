@@ -3,10 +3,9 @@ import { PageProps } from '@/types';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-export default function ModalTypePage({
-  params,
-  searchParams,
-}: PageProps<{ type: string }>) {
+export default async function ModalTypePage(props: PageProps<{ type: string }>) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   if (!params?.type) {
     notFound();
   }
