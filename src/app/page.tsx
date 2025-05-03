@@ -15,6 +15,17 @@ const DevIcons = dynamic(() => import('@/components/dev-icons'), {
   loading: () => <Skeleton className='h-6 w-6 rounded-full' />,
 });
 
+export async function getBase64ImageUrl(
+  imageId: string
+): Promise<string | undefined> {
+  const response = await fetch(
+    `${process.env.CLOUDINARY_BASE_URL}w_100/e_blur:1000,q_auto,f_webp${imageId}`
+  );
+  const buffer = await response.arrayBuffer();
+  const data = Buffer.from(buffer).toString('base64');
+  return `data:image/webp;base64,${data}`;
+}
+
 // const getImages = async () => {
 //   const result = await Promise.all(
 //     Array.from({ length: 5 }).map((_, i) => getBase64(`/assets/${i + 1}.webp`))
@@ -59,6 +70,8 @@ export default async function RootPage(props: PageProps) {
                         width={420}
                         height={420}
                         src='lucas-ghibli'
+                        blur
+                        blurDataURL={}
                         sizes='420px'
                         alt='Lucas profile picture'
                         priority

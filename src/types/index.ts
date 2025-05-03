@@ -1,4 +1,4 @@
 export interface PageProps<T = { [key: string]: any }> {
-  params: T;
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<T>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }

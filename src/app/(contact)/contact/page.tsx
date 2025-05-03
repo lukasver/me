@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 
 const CalComponent = dynamic(() => import('@/components/cal'), {
-  ssr: false,
   loading: () => (
     <div className='flex gap-2 min-h-[calc(100%dvh-20%)] w-full justify-center'>
       <Skeleton className='h-96 w-44' />
@@ -14,7 +13,7 @@ const CalComponent = dynamic(() => import('@/components/cal'), {
 });
 
 export const metadata: Metadata = {
-  title: 'Contact'
+  title: 'Contact',
 };
 
 export default function ContactPage() {
