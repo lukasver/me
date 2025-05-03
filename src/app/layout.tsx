@@ -19,13 +19,17 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
+
   description: siteConfig.description,
+
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
+
   metadataBase: new URL('https://lucasverdiell.xyz'),
+
   alternates: {
     canonical: '/',
     languages: {
@@ -33,12 +37,13 @@ export const metadata: Metadata = {
       'en-GB': '/en-GB',
     },
   },
+
   openGraph: {
     images: '/og-image.png',
     title: siteConfig.name,
     description: siteConfig.description,
     url: 'https://lucasverdiell.xyz',
-  },
+  }
 };
 
 export const viewport: Viewport = {

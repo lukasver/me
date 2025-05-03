@@ -14,7 +14,7 @@ const CalComponent = dynamic(() => import('@/components/cal'), {
 });
 
 export const metadata: Metadata = {
-  title: 'Contact',
+  title: 'Contact'
 };
 
 export default function ContactPage() {
