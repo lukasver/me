@@ -2,39 +2,35 @@ import Container from '@/components/container';
 import HomeTabs from '@/components/home-tabs';
 import { PageProps } from '@/types';
 import { siteConfig } from '@/config/site';
-import Carousel from '@/components/carousel';
-import { getPseudoRandomNumber } from '@/lib/utils';
+import { CldImage } from 'next-cloudinary';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import Projects from '@/components/projects';
-import { getBase64 } from '@/lib/plaiceholder';
 
 const DevIcons = dynamic(() => import('@/components/dev-icons'), {
-  ssr: false,
+  // ssr: false,
   loading: () => <Skeleton className='h-6 w-6 rounded-full' />,
 });
 
-const getImages = async () => {
-  const result = await Promise.all(
-    Array.from({ length: 5 }).map((_, i) => getBase64(`/assets/${i + 1}.webp`))
-  );
-  return result.map(() => {
-    const num = getPseudoRandomNumber(5);
-    const path = `/assets/${num}.webp`;
-    return {
-      src: path,
-      alt: `Lucas photo ${num}`,
-      height: 420,
-      width: 420,
-      placeholder: 'blur' as const,
-      blurDataURL: result[num! - 1],
-    };
-  });
-};
+// const getImages = async () => {
+//   const result = await Promise.all(
+//     Array.from({ length: 5 }).map((_, i) => getBase64(`/assets/${i + 1}.webp`))
+//   );
+//   return result.map(() => {
+//     const num = getPseudoRandomNumber(5);
+//     const path = `/assets/${num}.webp`;
+//     return {
+//       src: path,
+//       alt: `Lucas photo ${num}`,
+//       height: 420,
+//       width: 420,
+//       placeholder: 'blur' as const,
+//       blurDataURL: result[num! - 1],
+//     };
+//   });
+// };
 
 export default async function RootPage({ searchParams }: PageProps) {
-  const sources = await getImages();
-
   return (
     <>
       <main className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>
@@ -51,8 +47,14 @@ export default async function RootPage({ searchParams }: PageProps) {
               </div>
             </div>
             <div className='flex flex-col lg:flex-row items-stretch justify-center gap-2 xl:gap-10 animate-fade-in-2'>
-              <div className='grow-0 shrink-0 sm:basis-[420px] sm:max-w-[420px] self-center'>
-                <Carousel sources={sources} />
+              <div className='grow-0 shrink-0 sm:basis-[420px] sm:max-w-[420px] self-center aspect-square'>
+                <CldImage
+                  width='640'
+                  height='640'
+                  src='lucas-ghibli'
+                  sizes='100vw'
+                  alt='Lucas profile picture'
+                />
               </div>
               <div className='flex grow animate-fade-in-3'>
                 <HomeTabs tab={searchParams.tab && String(searchParams.tab)} />

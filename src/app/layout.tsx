@@ -12,6 +12,7 @@ import { Layout } from '@/components/layout';
 
 import { Toaster } from '@/components/ui/sonner';
 import Analytics from '@/components/analytics';
+import Head from 'next/head';
 
 export const metadata: Metadata = {
   title: {
@@ -56,7 +57,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <ViewTransitions>
       <html lang='en' suppressHydrationWarning>
-        <head>
+        <Head>
           <Analytics />
           <noscript>
             <meta
@@ -64,7 +65,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
               content="0; URL='https://www.youtube.com/watch?v=dQw4w9WgXcQ'"
             />
           </noscript>
-        </head>
+        </Head>
         <body
           className={cn(
             'min-h-screen bg-background font-sans antialiased',
