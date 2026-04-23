@@ -37,8 +37,8 @@
     "lucide-react": "^0.331.0",
     "luxon": "^3.5.0",
     "mdast-util-toc": "^7.1.0",
-    "next": "14.2.13",
-    "next-mdx-remote": "^5.0.0",
+    "next": "14.2.35",
+    "next-mdx-remote": "^6.0.0",
     "next-themes": "^0.2.1",
     "next-view-transitions": "^0.3.2",
     "plaiceholder": "^3.0.0",
@@ -75,7 +75,7 @@
   },
   "pnpm": {
     "overrides": {
-      "sharp": "^0.32.6"
+      "sharp": "^0.34.5"
     }
   }
 }
