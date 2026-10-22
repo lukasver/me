@@ -1,31 +1,68 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# [Lucas Verdiell](https://lucasverdiell.dev)
 
-## Getting Started
+Personal site and blog of Lucas Verdiell.
 
-First, run the development server:
+## Stack
+
+- Next.js 14 (App Router) and TypeScript
+- Tailwind CSS and shadcn/ui (Radix primitives)
+- MDX blog rendered with next-mdx-remote
+- Contact form emails built with react-email and sent through the Resend API
+- Cal.com embed for booking calls
+
+## Requirements
+
+- Bun 1.4.4 (see `packageManager` in `package.json`)
+- Node >=24.22.1 (see `.nvmrc`)
+
+## Scripts
 
 ```bash
-bun install
-bun dev
+bun install          # install dependencies
+bun dev              # start the dev server on http://localhost:3000
+bun run build        # production build
+bun run typecheck    # tsc --noEmit
+bun run lint         # next lint
+bun run email        # react-email preview server for emails/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+There is no `.env.example`. Set these in `.env.local` for local development:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- `RESEND`: Resend API key used by `src/app/api/emails/send`
+- `FROM`: sender address for contact form emails
+- `TO`: recipient address for contact form emails
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID`: Google Analytics measurement ID (only loaded in production)
 
-## Learn More
+## Writing a post
 
-To learn more about Next.js, take a look at the following resources:
+Posts live in `src/app/blog/posts/*.mdx`. The slug is the filename, so `my-post.mdx` is served at `/blog/my-post`. Frontmatter fields (validated in `src/lib/mdx.ts`):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```mdx
+---
+title: Post title
+summary: One line summary
+publishedAt: '2026-01-31'
+image: /assets/cover.png
+tags: ['tag-one', 'tag-two']
+authors: ['Lucas Verdiell']
+draft: true
+---
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+`title`, `summary` and `publishedAt` are required. Set `draft: true` to hide a post.
 
-## Deploy on Vercel
+## Project structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/app         routes: home, blog, contact, api, og, rss, sitemap, robots
+src/components  page sections, MDX components and shadcn/ui in ui/
+src/lib         MDX loading, table of contents, helpers
+emails          react-email template for the contact form
+public          icons, OG image and static assets
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Deploy
+
+Deployed on Vercel.
