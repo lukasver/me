@@ -487,7 +487,7 @@ const FreelanceComponent: React.FC<unknown> = () => {
         </li>
         <li>
           Stack: Next.js, Mercado Pago, WhatsApp Business Cloud API, Cloudflare
-          Workers, Terraform (Cloudflare).
+          Workers, Wrangler.
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
