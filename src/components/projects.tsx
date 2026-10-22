@@ -517,6 +517,16 @@ const FreelanceComponent: React.FC<unknown> = () => {
           they actually own.
         </li>
         <li>
+          Contract events are indexed, so the game and the marketplace always
+          reflect what actually happened on-chain.
+        </li>
+        <li>
+          The hard part is atomicity and idempotency. Once an item is exported
+          it&apos;s gone from the game, so it never exists in-game and on-chain
+          at the same time, even when a transaction fails halfway or gets
+          retried.
+        </li>
+        <li>
           Stack: Thirdweb, smart contracts (ERC-20, ERC-721), TypeScript,
           Terraform (Railway).
         </li>
