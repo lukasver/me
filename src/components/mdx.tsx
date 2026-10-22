@@ -58,9 +58,48 @@ function RoundedImage(props) {
   return <Image alt={props.alt} className='rounded-lg' {...props} />;
 }
 
-function Code({ children, ...props }) {
+// sugar-high only understands JS-like grammars, so other fenced languages
+// (toml, bash, ...) and inline code render as plain text.
+const HIGHLIGHTED_LANGUAGES = new Set([
+  'js',
+  'jsx',
+  'javascript',
+  'ts',
+  'tsx',
+  'typescript',
+  'json',
+]);
+
+function Code({ children, className, ...props }) {
+  const language = /language-(\w+)/.exec(className ?? '')?.[1];
+  if (
+    !language ||
+    !HIGHLIGHTED_LANGUAGES.has(language) ||
+    typeof children !== 'string'
+  ) {
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  }
   const codeHTML = highlight(children);
-  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
+  return (
+    <code
+      className={className}
+      dangerouslySetInnerHTML={{ __html: codeHTML }}
+      {...props}
+    />
+  );
+}
+
+function Pre(props) {
+  return (
+    <pre
+      {...props}
+      className='rounded-lg border border-input bg-muted/50 text-foreground dark:bg-input/30'
+    />
+  );
 }
 
 function slugify(str) {
@@ -107,6 +146,7 @@ const components = {
   a: CustomLink,
   blockquote: Blockquote,
   code: Code,
+  pre: Pre,
   Table,
 };
 
