@@ -64,40 +64,97 @@ const SmatContent: React.FC<unknown> = () => {
     <div>
       <h3 className='font-head text-secondary'>Achievements:</h3>
       <Separator />
-      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold mt-2'>
         <li>
-          In charge of coordinating a team of 4 backend and frontend developers
-          to carry out implementations considering requests from founders &
-          feedback from users, working with AGILE practices & iterations
-          ensuring high quality deliverables.{' '}
+          Lead full stack developer and cloud engineer at a Swiss finance
+          startup, remote since Sep 2021. I take features from design to
+          production on web and mobile.
         </li>
-        <li className='mt-2'>
-          Successfully refactored whole frontend app from Javascript with
-          vanilla{' '}
-          <a href={'https://reactjs.org/'} rel='noopener nofollow noreferrer'>
-            React
-          </a>{' '}
-          to Typescript with{' '}
-          <a href={'https://nextjs.org/'} rel='noopener nofollow noreferrer'>
-            NextJS
-          </a>{' '}
-          (pages router) with code splitting & client side rendering
-          considerably reducing bugs, loading times & web vitals metrics:{' '}
-          <a href={'https://app.smat.io/'} rel='noopener nofollow'>
-            Smat app
+        <li>
+          I lead a team of 4 backend and frontend developers. I set the code
+          standards, the monorepo layout and the microservice patterns, and run
+          the sprints (dailies, weeklies, planning) on{' '}
+          <a
+            href={'https://github.com/features/issue-tracking'}
+            rel='noopener nofollow noreferrer'
+          >
+            GitHub Projects
           </a>
+          .
         </li>
         <li>
-          Implemented automation end-to-end testing with{' '}
-          <a href={'https://playwright.dev/'} rel='noopener nofollow noreferrer'>
+          Rewrote the{' '}
+          <a href={'https://app.smat.io/'} rel='noopener nofollow noreferrer'>
+            main app
+          </a>{' '}
+          from vanilla JavaScript React to TypeScript and{' '}
+          <a href={'https://nextjs.org/'} rel='noopener nofollow noreferrer'>
+            Next.js
+          </a>{' '}
+          (pages router). Code splitting cut load times and the bug count went
+          down considerably.
+        </li>
+        <li>
+          Added end-to-end tests with{' '}
+          <a
+            href={'https://playwright.dev/'}
+            rel='noopener nofollow noreferrer'
+          >
             Playwright
           </a>{' '}
-          leading to an important reduction in bugs & regression issues and
-          improving deployment pipelines.
+          and{' '}
+          <a href={'https://vitest.dev/'} rel='noopener nofollow noreferrer'>
+            Vitest
+          </a>{' '}
+          and wired them into the deploy pipeline, so regressions get caught
+          before prod.
         </li>
         <li>
-          Planned and contributing in the creation of the company's data
-          warehouse using{' '}
+          Built the{' '}
+          <a
+            href={'https://reactnative.dev/'}
+            rel='noopener nofollow noreferrer'
+          >
+            React Native
+          </a>{' '}
+          and{' '}
+          <a href={'https://expo.dev/eas'} rel='noopener nofollow noreferrer'>
+            Expo EAS
+          </a>{' '}
+          <a
+            href={'https://smatapp.app.link/site'}
+            rel='noopener nofollow noreferrer'
+          >
+            mobile app
+          </a>{' '}
+          for iOS and Android.
+        </li>
+        <li>
+          Shipped more products on the same stack: a multi-store admin
+          dashboard, an{' '}
+          <a href={'https://ams.smat.io/'} rel='noopener nofollow noreferrer'>
+            asset-management SaaS
+          </a>
+          , and a{' '}
+          <a href={'https://token.smat.io/'} rel='noopener nofollow noreferrer'>
+            token presale dashboard
+          </a>{' '}
+          with smart-contract integration, built on Postgres,{' '}
+          <a href={'https://www.prisma.io/'} rel='noopener nofollow noreferrer'>
+            Prisma
+          </a>{' '}
+          and Next.js SSR.
+        </li>
+        <li>
+          Moved our in-house auth to{' '}
+          <a href={'https://zitadel.com/'} rel='noopener nofollow noreferrer'>
+            Zitadel
+          </a>
+          . The main reason was machine-to-machine auth between our services,
+          which the old module couldn&apos;t do cleanly.
+        </li>
+        <li>
+          Designed the company data warehouse on Google Cloud:{' '}
           <a
             href={'https://cloud.google.com/storage'}
             rel='noopener nofollow noreferrer'
@@ -109,7 +166,7 @@ const SmatContent: React.FC<unknown> = () => {
             href={'https://cloud.google.com/functions'}
             rel='noopener nofollow noreferrer'
           >
-            Cloud functions
+            Cloud Functions
           </a>
           ,{' '}
           <a
@@ -118,134 +175,60 @@ const SmatContent: React.FC<unknown> = () => {
           >
             BigQuery
           </a>
-          ,{' '}
+          , and{' '}
           <a
             href={'https://cloud.google.com/looker'}
             rel='noopener nofollow noreferrer'
           >
             Looker Studio
           </a>{' '}
-          &{' '}
-          <a
-            href={'https://analytics.google.com/'}
-            rel='noopener nofollow noreferrer'
-          >
-            Google Analytics
-          </a>{' '}
-        </li>
-
-        <li>
-          Migrated in-house auth module to external provider using{' '}
-          <a href={'https://zitadel.com/'} rel='noopener nofollow'>
-            Zitadel
-          </a>{' '}
-          cloud to improving overall security processes & allowing for
-          machine-to-machine communication between apps and services.
+          for reporting.
         </li>
         <li>
-          In charge of creating and maintaining deployment pipelines with{' '}
+          Own the infra: CI/CD with{' '}
           <a
             href={'https://github.com/features/actions'}
             rel='noopener nofollow noreferrer'
           >
-            Github Actions
-          </a>
-          ,{' '}
+            GitHub Actions
+          </a>{' '}
+          and{' '}
           <a href={'https://www.docker.com'} rel='noopener nofollow noreferrer'>
             Docker
           </a>
-          ,{' '}
+          , infrastructure as code with{' '}
           <a
-            href={'https://www.portainer.io'}
+            href={'https://www.terraform.io/'}
             rel='noopener nofollow noreferrer'
           >
-            Portainer
-          </a>
-          ,{' '}
+            Terraform
+          </a>{' '}
+          across several environments, plus{' '}
           <a href={'https://vercel.com'} rel='noopener nofollow noreferrer'>
             Vercel
           </a>
-          ,{' '}
-          <a
-            href={'https://cloud.google.com'}
-            rel='noopener nofollow noreferrer'
-          >
-            Google Cloud
-          </a>{' '}
-          with different environments.
+          , Portainer and Google Cloud IAM admin.
         </li>
         <li>
+          Built an AI chat assistant that answers from our own documents, using{' '}
+          <a href={'https://openai.com/'} rel='noopener nofollow noreferrer'>
+            OpenAI
+          </a>{' '}
+          and{' '}
           <a
-            href={'https://cloud.google.com'}
+            href={'https://www.llamaindex.ai/'}
             rel='noopener nofollow noreferrer'
           >
-            Google Cloud
-          </a>{' '}
-          & IAM admin.
-        </li>
-        <li>
-          Developed a multiplatform mobile app using{' '}
-          <a
-            href={'https://reactnative.dev'}
-            rel='noopener nofollow noreferrer'
-          >
-            React Native
-          </a>{' '}
-          &{' '}
-          <a href={'https://expo.dev/eas'} rel='noopener nofollow noreferrer'>
-            Expo EAS
+            LlamaIndex
           </a>
-          :{' '}
-          <a href={'https://smatapp.app.link/site'} rel='noopener nofollow'>
-            Smat mobile app
-          </a>
-          .{' '}
-        </li>
-
-        <li>
-          Designed app's user stories and{' '}
-          <a href={'https://www.figma.com'} rel='noopener nofollow noreferrer'>
-            Figma
-          </a>{' '}
-          mockups ready for development.{' '}
-        </li>
-        <li>
-          Carried out sprint daily and weekly meetings, and sprint plannings
-          using{' '}
-          <a href={'https://www.github.com'} rel='noopener nofollow noreferrer'>
-            Github
-          </a>{' '}
-          projects.
-        </li>
-        <li>
-          Planned, developed & deployed an ICO dashboard for creating token pre
-          sales. Used{' '}
-          <a
-            href={'https://www.postgresql.org'}
-            rel='noopener nofollow noreferrer'
-          >
-            Postgres
-          </a>{' '}
-          &{' '}
-          <a href={'https://www.prisma.io'} rel='noopener nofollow noreferrer'>
-            Prisma ORM
-          </a>{' '}
-          with NextJS and SSR:{' '}
-          <a href={'https://token.smat.io'} rel='noopener nofollow'>
-            Smat token dashboard
-          </a>{' '}
           .
         </li>
         <li>
-          Implemented an AI chat system that bases its responses from a LLM
-          model with fed context from custom document files using
-          <a href={'https://openai.com/'} rel='noopener nofollow'>
-            OpenAI
+          Write the user stories and{' '}
+          <a href={'https://www.figma.com'} rel='noopener nofollow noreferrer'>
+            Figma
           </a>{' '}
-          &{' '}
-          <a href={'https://llamaindex.ai'} rel='noopener nofollow'>
-            Llamaindex
-          </a>
+          mockups before anything gets built.
         </li>
       </ul>
       <h3 className='font-head text-secondary mt-2'>Progression:</h3>
@@ -253,9 +236,11 @@ const SmatContent: React.FC<unknown> = () => {
       <div className='mt-2 font-head font-bold flex flex-row gap-2 items-center'>
         <p>QA Manual / Automation</p>
         <Icons.chevronRight className='size-5 text-secondary' />
-        <p>Fullstack Developer</p>
+        <p>Full Stack Developer</p>
         <Icons.chevronRight className='size-5 text-secondary' />
-        <p>Tech Lead / Project Manager</p>
+        <p>Tech Lead</p>
+        <Icons.chevronRight className='size-5 text-secondary' />
+        <p>Lead Full Stack Developer / Cloud Engineer</p>
       </div>
     </div>
   );
@@ -266,27 +251,45 @@ const HenryComponent: React.FC<unknown> = () => {
     <div>
       <h3 className='font-head text-secondary'>Achievements:</h3>
       <Separator />
-      <div className='flex flex-col gap-2 list-inside [&>p>a]:text-secondary [&>p>a]:font-semibold [&>li>a]:font-semibold'>
-        <p className='mt-2'>
-          Developed{' '}
-          <a href={'https://talent.soyhenry.com'} rel='noopener nofollow'>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold mt-2'>
+        <li>
+          Built{' '}
+          <a
+            href={'https://talent.soyhenry.com'}
+            rel='noopener nofollow noreferrer'
+          >
             Henry Talent
           </a>{' '}
-          , a management platform to help recruiters find IT talent easily. Made
-          from scratch to production working with <b>Typescript</b>,
-          <b> React</b>,<b> Redux</b>, <b> PostgreSQL</b>, <b> Sequelize</b>,
-          <b> OpenAPI</b>, <b> testing (Mocha/Chai)</b>, <b> CI/CD </b>
-          pipelines between other technologies, frameworks and libraries.
-          <br />
-          <br /> Always maintaining an AGILE mindset and working with Scrum.
-        </p>
-      </div>
+          from scratch to production, as part of a core team of 4. It&apos;s a
+          platform where recruiters find developers coming out of the Henry
+          bootcamp.
+        </li>
+        <li>
+          We worked in Scrum with TDD and CI on{' '}
+          <a
+            href={'https://github.com/features/actions'}
+            rel='noopener nofollow noreferrer'
+          >
+            GitHub Actions
+          </a>
+          , and kept the API contract in OpenAPI so frontend and backend could
+          move in parallel.
+        </li>
+        <li>
+          Before that I was a teaching assistant. I led daily stand-ups and
+          mentored 15+ bootcamp students on CS fundamentals.
+        </li>
+        <li>
+          Stack: TypeScript, JavaScript, React, Redux, PostgreSQL, Sequelize,
+          OpenAPI, Mocha/Chai.
+        </li>
+      </ul>
       <h3 className='font-head text-secondary mt-2'>Progression:</h3>
       <Separator />
       <div className='mt-2 font-head font-bold flex flex-row gap-2 items-center'>
         <p>Teaching assistant</p>
         <Icons.chevronRight className='size-5 text-secondary' />
-        <p>Fullstack developer</p>
+        <p>Full Stack Developer</p>
       </div>
     </div>
   );
@@ -297,38 +300,43 @@ const UcelComponent: React.FC<unknown> = () => {
     <div>
       <h3 className='font-head text-secondary'>Achievements:</h3>
       <Separator />
-      <div className='flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
-        <p className='mt-2'>
-          Professor in the “Transportation Systems” course within the Bachelor
-          of Tourism program. Thanks to an agreement between UCEL & Amadeus I
-          got certified as trainer for the Rosario (Santa Fe, Argentina) region.
-          In this role, I was responsible for planning, organizing, and
-          conducting courses on Amadeus Selling Platform Connect, including
-          reservations, fares, ticketing, and reissue. Some of the audiences I
-          have taught include:
-        </p>
-        <ul className='list-disc list-inside'>
-          <li>University students (UCEL & UNR)</li>
-          <li>Members of the Regional Chamber for Travel Agencies (CAVyT)</li>
-          <li>Staff members from airlines at ROS Airport (GOL & LATAM)</li>
-          <li>
-            Local clients of Amadeus, including travel agencies like OLA, Carey,
-            Grupo3, etc...
-          </li>
-        </ul>
-        <p>
-          Overall, I have conducted both onsite and online courses for a wide
-          audiences of over 200 students and professionals in Rosario area.
-        </p>
-      </div>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold mt-2'>
+        <li>
+          Professor of &quot;Transportation Systems&quot; in the Bachelor of
+          Tourism, Mar 2017 to Sep 2022. I designed the curriculum myself.
+        </li>
+        <li>
+          Certified Amadeus trainer for the Rosario and Santa Fe region through
+          a UCEL and Amadeus partnership (Amadeus Train the Trainers, 2017).
+        </li>
+        <li>
+          Planned and taught Amadeus Selling Platform Connect courses
+          (reservations, fares, ticketing, reissue), onsite and online, to 200+
+          people.
+        </li>
+        <li>
+          Audiences included:
+          <ul className='list-[circle] list-inside ml-6'>
+            <li>University students (UCEL and UNR)</li>
+            <li>Members of the Regional Chamber for Travel Agencies (CAVyT)</li>
+            <li>Airline staff at ROS Airport (GOL and LATAM)</li>
+            <li>
+              Local Amadeus clients, including travel agencies like OLA, Carey
+              and Grupo3
+            </li>
+          </ul>
+        </li>
+        <li>
+          Teaching is a big part of how I lead dev teams now: explain the why,
+          then let people run.
+        </li>
+      </ul>
       <h3 className='font-head text-secondary mt-2'>Progression:</h3>
       <Separator />
       <div className='mt-2 font-head font-bold flex flex-row gap-2 items-center'>
-        <p>Passenger service Agent</p>
+        <p>Professor</p>
         <Icons.chevronRight className='size-5 text-secondary' />
-        <p>ICPT (In Charge of Procedures and Trainings)</p>
-        <Icons.chevronRight className='size-5 text-secondary' />
-        <p>Airport supervisor</p>
+        <p>Amadeus Certified Trainer</p>
       </div>
     </div>
   );
@@ -339,44 +347,212 @@ const LatamComponent: React.FC<unknown> = () => {
     <div>
       <h3 className='font-head text-secondary'>Achievements:</h3>
       <Separator />
-      <div className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
-        <p className='mt-2'>
-          In charge of coordinating passenger service teams of around 14 people
-          and working alongside involved actors such as Customs and Immigrations
-          offices, airport authorities, airlines, etc. so as to guarantee an
-          efficient reception, turn-around, and dispatch of international
-          flights at ROS International Airport while delivering an outstanding
-          passenger service following airline's standards.
-        </p>
-        <p>
-          Distinction in conflict resolutions, contingencies, and critical
-          situations. Networking, local KPI analysis, and continuous
-          improvement.
-        </p>
-        <p>
-          In charge of procedures and trainings (ICPT), coordinating
-          certification, courses, & revalidations for the airline's airport
-          staff.
-        </p>
-        <p>
-          Was awarded with a{' '}
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold mt-2'>
+        <li>
+          Seven years at Rosario International Airport (ROS), Nov 2013 to Aug
+          2020, ending as airport passenger service supervisor.
+        </li>
+        <li>
+          Ran passenger service teams of around 14 people on international
+          flights: reception, turnaround and dispatch. Ground ops is
+          coordination: customs, immigration, the airport authority and other
+          airlines all have to line up on a tight clock.
+        </li>
+        <li>
+          Handled the contingencies: delays, cancellations and conflicts on the
+          floor. I used local KPIs to fix what kept repeating.
+        </li>
+        <li>
+          As ICPT (In Charge of Procedures and Training), I ran certifications,
+          courses and revalidations for the airport staff.
+        </li>
+        <li>
+          Worked the systems end to end: sales (Amadeus ARD, Sabre Interact),
+          check-in (Amadeus DCS CM, Sabre Interact) and lost luggage
+          (WorldTracer).
+        </li>
+        <li>
+          Named a national{' '}
           <Link
             className={'font-bold text-secondary'}
             href={'/modal/certifications?doc=latam'}
           >
-            Service Leader national{' '}
-          </Link>
-          award by the airline management.
-        </p>
-      </div>
+            Service Leader
+          </Link>{' '}
+          by LATAM Argentina.
+        </li>
+      </ul>
       <h3 className='font-head text-secondary mt-2'>Progression:</h3>
       <Separator />
       <div className='mt-2 font-head font-bold flex flex-row gap-2 items-center'>
-        <p>Passenger Service Lead</p>
+        <p>Passenger Service Agent</p>
         <Icons.chevronRight className='size-5 text-secondary' />
-        <p>ICPT</p>
+        <p>Lead Passenger Service Agent / ICPT</p>
         <Icons.chevronRight className='size-5 text-secondary' />
-        <p>Airport supervisor</p>
+        <p>Airport Passenger Service Supervisor</p>
+      </div>
+    </div>
+  );
+};
+
+const FreelanceComponent: React.FC<unknown> = () => {
+  return (
+    <div>
+      <h3 className='font-head text-secondary'>Achievements:</h3>
+      <Separator />
+      <p className='mt-2'>
+        Since 2024 I also take on freelance and consulting work, mostly AI,
+        automation and web3 projects for small companies.
+      </p>
+      <h4 className='font-head font-bold mt-2'>
+        RAG knowledge base and support chatbot (2025 to present)
+      </h4>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+        <li>
+          A RAG knowledge base and support chatbot for a client, answering
+          customer questions from a curated set of the company&apos;s own
+          documents.
+        </li>
+        <li>
+          Answers stay grounded in the client&apos;s documentation, not in the
+          model&apos;s general knowledge.
+        </li>
+        <li>
+          The hard part isn&apos;t the LLM, it&apos;s trust. A big part of the
+          work has been hardening the test suite, so the pipeline can keep
+          changing with confidence.
+        </li>
+        <li>Stack: TypeScript, Bun, Postgres, pgvector, pg-boss.</li>
+      </ul>
+      <h4 className='font-head font-bold mt-2'>
+        Facturador: AFIP invoicing automation (2022 to present)
+      </h4>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+        <li>
+          AFIP, Argentina&apos;s tax authority, makes you issue invoices one by
+          one in its web portal. I built a system that issues them for a client
+          in bulk and keeps going when the portal doesn&apos;t cooperate.
+        </li>
+        <li>
+          The client gets a web app to load and track invoices. Behind it sit an
+          API, a queue and workers on Cloudflare Workers and Queues, so each
+          invoice is its own job with retries and error handling instead of one
+          long script.
+        </li>
+        <li>
+          The workers drive the AFIP portal with headless Playwright over the
+          Chrome DevTools Protocol. Each invoice gets a timeout so one slow page
+          doesn&apos;t stall the rest. Once the flow reaches the final submit,
+          the timeout is disarmed on purpose, so it never cuts off an invoice
+          that&apos;s actually being issued.
+        </li>
+        <li>
+          I open-sourced the automation layer:{' '}
+          <a
+            href={'https://github.com/lukasver/facturador'}
+            rel='noopener nofollow noreferrer'
+          >
+            github.com/lukasver/facturador
+          </a>{' '}
+          (MIT).
+        </li>
+        <li>
+          Stack: TypeScript, TanStack Start, SQLite, Cloudflare Workers and
+          Queues, Playwright, Chrome DevTools Protocol.
+        </li>
+      </ul>
+      <h4 className='font-head font-bold mt-2'>
+        Cerveza HB: storefront for a craft brewery (2024)
+      </h4>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+        <li>
+          Landing page and online store for a craft brewery:{' '}
+          <a href={'https://cervezahb.com'} rel='noopener nofollow noreferrer'>
+            cervezahb.com
+          </a>
+          .
+        </li>
+        <li>
+          Payments through{' '}
+          <a href={'https://stripe.com'} rel='noopener nofollow noreferrer'>
+            Stripe
+          </a>{' '}
+          and{' '}
+          <a
+            href={'https://www.mercadopago.com'}
+            rel='noopener nofollow noreferrer'
+          >
+            Mercado Pago
+          </a>
+          .
+        </li>
+        <li>
+          The interesting bit is WhatsApp. I integrated the WhatsApp Business
+          Cloud API in coexistence mode, so automated sales and support messages
+          go out from the same number the brewery already uses in its WhatsApp
+          app. They didn&apos;t have to change numbers or give up the app.
+        </li>
+        <li>
+          Stack: Next.js, Stripe, Mercado Pago, WhatsApp Business Cloud API.
+        </li>
+      </ul>
+      <h4 className='font-head font-bold mt-2'>
+        Token sale launchpad for a tokenized-asset company (2024 to present)
+      </h4>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+        <li>
+          Designed and built the private-sale launchpad for a tokenized-asset
+          company&apos;s token offering.
+        </li>
+        <li>
+          Multi-chain smart-contract integration through{' '}
+          <a href={'https://thirdweb.com'} rel='noopener nofollow noreferrer'>
+            Thirdweb
+          </a>
+          , plus one payment processor for both fiat and crypto, so buyers
+          don&apos;t need a wallet to take part.
+        </li>
+        <li>
+          Also built their public docs site, statically generated with{' '}
+          <a href={'https://nextra.site'} rel='noopener nofollow noreferrer'>
+            Nextra
+          </a>{' '}
+          on Next.js, so it&apos;s fast and easy to keep up to date in Markdown.
+        </li>
+        <li>
+          Stack: Next.js, TypeScript, Thirdweb, Nextra, shadcn/ui, Tailwind CSS
+          v4.
+        </li>
+      </ul>
+      <h4 className='font-head font-bold mt-2'>
+        NFT marketplace for a web3 game (2024 to present)
+      </h4>
+      <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+        <li>
+          Built solo, end to end: the NFT marketplace integration for a web3
+          game.
+        </li>
+        <li>
+          Players can export items they earned in the game and mint them as NFTs
+          they actually own.
+        </li>
+        <li>
+          I used{' '}
+          <a href={'https://thirdweb.com'} rel='noopener nofollow noreferrer'>
+            Thirdweb
+          </a>{' '}
+          with a mix of standard (ERC-20, ERC-721) and custom smart contracts.
+          The standard ones cover tokens and items, and the custom ones cover
+          the game logic the standards don&apos;t.
+        </li>
+        <li>Stack: Thirdweb, smart contracts (ERC-20, ERC-721), TypeScript.</li>
+      </ul>
+      <h3 className='font-head text-secondary mt-2'>Progression:</h3>
+      <Separator />
+      <div className='mt-2 font-head font-bold flex flex-row gap-2 items-center'>
+        <p>Freelance Developer</p>
+        <Icons.chevronRight className='size-5 text-secondary' />
+        <p>Independent Consultant</p>
       </div>
     </div>
   );
@@ -401,9 +577,19 @@ const accordionElements = [
   {
     value: 'item-4',
     trigger: (
-      <TriggerComponent name={'Latam Airlines'} src={'/assets/latam.png'} />
+      <TriggerComponent name={'LATAM Airlines'} src={'/assets/latam.png'} />
     ),
     content: <LatamComponent />,
+  },
+  {
+    value: 'item-5',
+    trigger: (
+      <TriggerComponent
+        name={'Freelance / Independent'}
+        src={'/assets/memoji.png'}
+      />
+    ),
+    content: <FreelanceComponent />,
   },
 ];
 
