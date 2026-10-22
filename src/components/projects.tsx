@@ -422,43 +422,42 @@ const FreelanceComponent: React.FC<unknown> = () => {
           work has been hardening the test suite, so the pipeline can keep
           changing with confidence.
         </li>
-        <li>Stack: TypeScript, Bun, Postgres, pgvector, pg-boss.</li>
+        <li>
+          Stack: TypeScript, Bun, Postgres, pgvector, pg-boss, Terraform (GCP,
+          Vercel).
+        </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
         Facturador: AFIP invoicing automation (2022 to present)
       </h4>
       <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
         <li>
-          AFIP, Argentina&apos;s tax authority, makes you issue invoices one by
-          one in its web portal. I built a system that issues them for a client
-          in bulk and keeps going when the portal doesn&apos;t cooperate.
+          A bulk invoicing system for a client that issues invoices through
+          AFIP, Argentina&apos;s tax authority, instead of loading them one by
+          one in its web portal.
         </li>
         <li>
-          The client gets a web app to load and track invoices. Behind it sit an
-          API, a queue and workers on Cloudflare Workers and Queues, so each
-          invoice is its own job with retries and error handling instead of one
-          long script.
+          The client loads and tracks invoices from a web app, and the system
+          does the issuing in the background.
         </li>
         <li>
-          The workers drive the AFIP portal with headless Playwright over the
-          Chrome DevTools Protocol. Each invoice gets a timeout so one slow page
-          doesn&apos;t stall the rest. Once the flow reaches the final submit,
-          the timeout is disarmed on purpose, so it never cuts off an invoice
-          that&apos;s actually being issued.
+          The hard part is the portal itself. It&apos;s slow and unpredictable,
+          so the system is built to keep going when it doesn&apos;t cooperate,
+          without ever cutting off an invoice that&apos;s already being issued.
         </li>
         <li>
-          I open-sourced the automation layer:{' '}
+          The automation layer is open source:{' '}
           <a
             href={'https://github.com/lukasver/facturador'}
             rel='noopener nofollow noreferrer'
           >
             github.com/lukasver/facturador
-          </a>{' '}
-          (MIT).
+          </a>
+          .
         </li>
         <li>
-          Stack: TypeScript, TanStack Start, SQLite, Cloudflare Workers and
-          Queues, Playwright, Chrome DevTools Protocol.
+          Stack: TypeScript, TanStack Start, SQLite, Playwright, DigitalOcean,
+          Terraform (GCP, Vercel).
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
@@ -487,13 +486,12 @@ const FreelanceComponent: React.FC<unknown> = () => {
           .
         </li>
         <li>
-          The interesting bit is WhatsApp. I integrated the WhatsApp Business
-          Cloud API in coexistence mode, so automated sales and support messages
-          go out from the same number the brewery already uses in its WhatsApp
-          app. They didn&apos;t have to change numbers or give up the app.
+          WhatsApp Business integration, so automated sales and support messages
+          go out from the same number the brewery already uses.
         </li>
         <li>
-          Stack: Next.js, Stripe, Mercado Pago, WhatsApp Business Cloud API.
+          Stack: Next.js, Stripe, Mercado Pago, WhatsApp Business Cloud API,
+          Cloudflare Workers, Terraform (GCP, Vercel).
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
@@ -505,47 +503,27 @@ const FreelanceComponent: React.FC<unknown> = () => {
           company&apos;s token offering.
         </li>
         <li>
-          Multi-chain smart-contract integration through{' '}
-          <a href={'https://thirdweb.com'} rel='noopener nofollow noreferrer'>
-            Thirdweb
-          </a>
-          , plus one payment processor for both fiat and crypto, so buyers
-          don&apos;t need a wallet to take part.
+          Buyers can take part with fiat or crypto, without needing a wallet.
         </li>
+        <li>Also built the company&apos;s public docs site.</li>
         <li>
-          Also built their public docs site, statically generated with{' '}
-          <a href={'https://nextra.site'} rel='noopener nofollow noreferrer'>
-            Nextra
-          </a>{' '}
-          on Next.js, so it&apos;s fast and easy to keep up to date in Markdown.
-        </li>
-        <li>
-          Stack: Next.js, TypeScript, Thirdweb, Nextra, shadcn/ui, Tailwind CSS
-          v4.
+          Stack: Next.js, TypeScript, Thirdweb, Nextra, Tailwind CSS, Terraform
+          (Railway).
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
         NFT marketplace for a web3 game (2024 to present)
       </h4>
       <ul className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
+        <li>Built solo, end to end: the NFT marketplace for a web3 game.</li>
         <li>
-          Built solo, end to end: the NFT marketplace integration for a web3
-          game.
-        </li>
-        <li>
-          Players can export items they earned in the game and mint them as NFTs
+          Players can take items they earned in the game and mint them as NFTs
           they actually own.
         </li>
         <li>
-          I used{' '}
-          <a href={'https://thirdweb.com'} rel='noopener nofollow noreferrer'>
-            Thirdweb
-          </a>{' '}
-          with a mix of standard (ERC-20, ERC-721) and custom smart contracts.
-          The standard ones cover tokens and items, and the custom ones cover
-          the game logic the standards don&apos;t.
+          Stack: Thirdweb, smart contracts (ERC-20, ERC-721), TypeScript,
+          Terraform (Railway).
         </li>
-        <li>Stack: Thirdweb, smart contracts (ERC-20, ERC-721), TypeScript.</li>
       </ul>
       <h3 className='font-head text-secondary mt-2'>Progression:</h3>
       <Separator />
