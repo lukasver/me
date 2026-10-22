@@ -40,7 +40,7 @@ const stacks = [
   { name: 'nextjs', label: 'Next.js', type: 'Fullstack' },
   {
     name: 'tanstack-start',
-    label: 'TanStack Start',
+    label: 'TanStack',
     type: 'Fullstack',
     icon: 'react',
   },
