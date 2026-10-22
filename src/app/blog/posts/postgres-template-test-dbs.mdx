@@ -7,7 +7,7 @@ draft: false
 authors: ['Lucas Verdiell']
 ---
 
-**TL;DR:** Migrate one Postgres test database, then use `CREATE DATABASE ... TEMPLATE` to spin up an already-migrated copy for every Bun test worker. Integration tests run in parallel without racing each other over shared rows, and a guard makes sure they can never touch your dev database again.
+> **TL;DR:** Migrate one Postgres test database, then use `CREATE DATABASE ... TEMPLATE` to spin up an already-migrated copy for every Bun test worker. Integration tests run in parallel without racing each other over shared rows, and a guard makes sure they can never touch your dev database again.
 
 I'm working on a client project where we're implementing a RAG pipeline over a curated set of documents. The docs get chunked, embedded and stored in Postgres, Questions come in as messages, background jobs (pg-boss) pick them up, and the pipeline retrieves the closest chunks and writes an answer from them. A good part of my work there lately has been hardening the test suite, because a RAG pipeline is only as trustworthy as the tests around it. This post is about the moment that showed me exactly where the suite was weakest.
 
