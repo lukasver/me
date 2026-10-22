@@ -45,6 +45,15 @@ function CustomLink(props) {
   return <a target='_blank' rel='noopener noreferrer' {...props} />;
 }
 
+function Blockquote(props) {
+  return (
+    <blockquote
+      {...props}
+      className='not-italic font-normal text-foreground border-l-4 border-primary bg-primary/5 dark:bg-primary/15 rounded-r-md px-4 py-1 [&_p]:before:content-none [&_p]:after:content-none'
+    />
+  );
+}
+
 function RoundedImage(props) {
   return <Image alt={props.alt} className='rounded-lg' {...props} />;
 }
@@ -96,6 +105,7 @@ const components = {
   h6: createHeading(6),
   Image: RoundedImage,
   a: CustomLink,
+  blockquote: Blockquote,
   code: Code,
   Table,
 };

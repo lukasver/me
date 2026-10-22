@@ -473,10 +473,6 @@ const FreelanceComponent: React.FC<unknown> = () => {
         </li>
         <li>
           Payments through{' '}
-          <a href={'https://stripe.com'} rel='noopener nofollow noreferrer'>
-            Stripe
-          </a>{' '}
-          and{' '}
           <a
             href={'https://www.mercadopago.com'}
             rel='noopener nofollow noreferrer'
@@ -490,8 +486,8 @@ const FreelanceComponent: React.FC<unknown> = () => {
           go out from the same number the brewery already uses.
         </li>
         <li>
-          Stack: Next.js, Stripe, Mercado Pago, WhatsApp Business Cloud API,
-          Cloudflare Workers, Terraform (Cloudflare).
+          Stack: Next.js, Mercado Pago, WhatsApp Business Cloud API, Cloudflare
+          Workers, Wrangler.
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
@@ -519,6 +515,16 @@ const FreelanceComponent: React.FC<unknown> = () => {
         <li>
           Players can take items they earned in the game and mint them as NFTs
           they actually own.
+        </li>
+        <li>
+          Contract events are indexed, so the game and the marketplace always
+          reflect what actually happened on-chain.
+        </li>
+        <li>
+          The hard part is atomicity and idempotency. Once an item is exported
+          it&apos;s gone from the game, so it never exists in-game and on-chain
+          at the same time, even when a transaction fails halfway or gets
+          retried.
         </li>
         <li>
           Stack: Thirdweb, smart contracts (ERC-20, ERC-721), TypeScript,

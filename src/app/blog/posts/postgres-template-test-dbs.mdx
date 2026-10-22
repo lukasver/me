@@ -1,0 +1,317 @@
+---
+title: My integration tests wiped my dev database. Postgres TEMPLATE fixed it
+summary: How I moved destructive integration tests off my development database and gave every Bun test worker its own Postgres copy with CREATE DATABASE ... TEMPLATE.
+publishedAt: '2026-10-22'
+tags: ['postgres', 'bun', 'testing', 'typescript']
+draft: false
+authors: ['Lucas Verdiell']
+---
+
+> **TL;DR:** Migrate one Postgres test database, then use `CREATE DATABASE ... TEMPLATE` to spin up an already-migrated copy for every Bun test worker. Integration tests run in parallel without racing each other over shared rows, and a guard makes sure they can never touch your dev database again.
+
+I'm working on a client project where we're implementing a RAG pipeline over a curated set of documents. The docs get chunked, embedded and stored in Postgres, Questions come in as messages, background jobs (pg-boss) pick them up, and the pipeline retrieves the closest chunks and writes an answer from them. A good part of my work there lately has been hardening the test suite, because a RAG pipeline is only as trustworthy as the tests around it. This post is about the moment that showed me exactly where the suite was weakest.
+
+One afternoon the pipeline stopped answering properly. Every question, even ones I knew were in the docs, got the same fallback message: "can you give me a bit more detail?". The pipeline logs said the retrieval step found nothing. I checked the database and the index table had 0 rows. The schema was there, the stored conversations were there, but the indexed docs were gone.
+
+My first guess was that the local Docker volume got wiped. Nope. The shell history showed the last `docker compose down -v` was days before. What actually happened was simpler, and more useful to find: earlier that afternoon an agent ran `bun run test:integration`, and a few of those test files do this in `beforeAll` / `afterAll`:
+
+```ts
+await pool.query("DELETE FROM chunks");
+await pool.query("DELETE FROM indexes");
+```
+
+And where were those tests connecting? To the same database my local pipeline was using. Every test file did something like this:
+
+```ts
+const databaseUrl = process.env.DATABASE_URL ?? "postgresql://...localhost/app";
+```
+
+Bun loads the repo `.env`, the `.env` has `DATABASE_URL` pointing at my dev database, so the tests happily deleted my indexed docs. NOT COOL at all!
+
+To be clear, this was my local development database, so nothing outside my machine was touched. But that's the point of hardening a suite: a test that can delete data just because of what `.env` happens to point at isn't safe, it just hasn't hurt anyone yet. Better to find that on my laptop than anywhere else.
+
+### Why this happens
+
+There were two problems, not one:
+
+1. **No dedicated test database.** Tests and dev shared one database, and nothing stopped a test from running against it.
+2. **Tests that wipe whole tables can't share a database with each other either.** `bun test --parallel` runs files in separate worker processes at the same time. If every worker uses the same test database, one file's `DELETE FROM messages` removes rows another file just inserted. Scoping every delete with a `WHERE conversation_id = $1` doesn't save you, because tests that count rows still see other files' rows, and the chunk and job table wipes are not scoped to a conversation anyway.
+
+The fix for the first one is a separate database with a guard. The fix for the second one is giving each test worker its own database. Bun even documents this: each worker gets `BUN_TEST_WORKER_ID` (1-based) "so tests can pick a distinct database". The question is how to create N migrated databases without running migrations N times. That's where `TEMPLATE` comes in.
+
+`CREATE DATABASE app_test_w1 TEMPLATE app_test` doesn't build an empty database and migrate it. It copies `app_test`, already migrated, with the same schema, extensions and data. So you migrate once and clone as many times as you have workers.
+
+### The setup
+
+The names here are generic: `app` is the dev database, `app_test` is the migrated template, and `app_test_w1` to `app_test_wN` are the worker copies. I'm using `pg` (node-postgres) and Bun.
+
+1. **Put the test database URL in one place, and refuse the dev database.**
+
+   Every test file used to build its own URL with a fallback. Now there is one resolver, and it throws if anything points at the dev database.
+
+```ts
+// packages/tests/test-database-url.ts
+export const DEV_DATABASE_NAME = "app";
+export const TEST_DATABASE_NAME = "app_test";
+
+const WORKER_ID_PATTERN = /^[1-9][0-9]*$/;
+
+export function databaseNameFromUrl(connectionUrl: string): string {
+  const name = new URL(connectionUrl).pathname.replace(/^\//, "");
+  if (!name) throw new Error("Test database URL has no database name");
+  return name;
+}
+
+function devDatabaseError(): Error {
+  return new Error(
+    `Integration tests must not use the development database (${DEV_DATABASE_NAME}). ` +
+      "Set TEST_DATABASE_URL to a separate database."
+  );
+}
+
+// The template URL (app_test). Never the dev database.
+export function resolveTestDatabaseUrl(): string {
+  const chosen = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
+  if (!chosen) throw new Error("Set TEST_DATABASE_URL");
+  if (databaseNameFromUrl(chosen) === DEV_DATABASE_NAME) throw devDatabaseError();
+  return chosen;
+}
+
+// app_test -> app_test_w3 when Bun runs this file on worker 3.
+export function workerDatabaseUrl(baseUrl: string, workerId: string | undefined): string {
+  const baseName = databaseNameFromUrl(baseUrl);
+  if (baseName === DEV_DATABASE_NAME) throw devDatabaseError();
+  if (!workerId) return baseUrl; // serial run, no worker id: use the template db itself
+  if (!WORKER_ID_PATTERN.test(workerId)) {
+    throw new Error(`Invalid Bun test worker id: ${workerId}`);
+  }
+  const url = new URL(baseUrl);
+  url.pathname = `/${baseName}_w${workerId}`;
+  return url.toString();
+}
+
+export function databaseUrlForThisProcess(): string {
+  return workerDatabaseUrl(resolveTestDatabaseUrl(), process.env.BUN_TEST_WORKER_ID);
+}
+```
+
+   I also added a small test for the resolver, including one that sets `DATABASE_URL` to the dev database and expects it to throw. That's the test I actually care about.
+
+2. **Set `DATABASE_URL` before any test file runs, with a preload.**
+
+   Bun runs `preload` scripts before the test files (and with `--parallel`, again in each isolated file), so this is the right spot to override whatever the `.env` says.
+
+```ts
+// packages/tests/preload.ts
+import { databaseUrlForThisProcess } from "./test-database-url";
+
+process.env.DATABASE_URL = databaseUrlForThisProcess();
+```
+
+```toml
+# packages/tests/bunfig.toml
+[test]
+preload = ["./preload.ts"]
+```
+
+   Now if someone runs the tests with `DATABASE_URL` pointing at `app`, the preload fails before a single `DELETE` runs.
+
+3. **Prepare the template: create it, migrate it, clear leftovers.**
+
+   This is a standalone script you run before the integration suite. It takes a second URL, an admin connection to some other database (like `postgres`), because you can't create or clone the template while you're connected to it. The snippets in steps 3 and 4 are the same file.
+
+```ts
+// packages/tests/ensure-test-database.ts
+import os from "node:os";
+import pg from "pg";
+import { closePool, migrate } from "@app/db"; // your migration runner + its pool, read DATABASE_URL
+import {
+  DEV_DATABASE_NAME,
+  databaseNameFromUrl,
+  resolveTestDatabaseUrl,
+  workerDatabaseUrl,
+} from "./test-database-url";
+
+const IDENTIFIER_PATTERN = /^[a-z][a-z0-9_]*$/;
+const WORKER_DATABASE_SUFFIX = /_w[0-9]+$/;
+
+const adminUrl = process.env.TEST_ADMIN_DATABASE_URL;
+const templateUrl = resolveTestDatabaseUrl();
+
+// CREATE/DROP DATABASE can't take $1 params, so validate names before interpolating.
+function assertDatabaseIdent(name: string): string {
+  if (!IDENTIFIER_PATTERN.test(name)) throw new Error(`Refusing database name: ${name}`);
+  return name;
+}
+
+function terminateSessions(client: pg.ClientBase, databaseName: string) {
+  return client.query(
+    "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = $1 AND pid <> pg_backend_pid()",
+    [databaseName]
+  );
+}
+
+async function ensureTemplateExists(client: pg.Client, templateName: string) {
+  const existing = await client.query<{ exists: boolean }>(
+    "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = $1) AS exists",
+    [templateName]
+  );
+  if (!existing.rows[0]?.exists) {
+    await client.query(`CREATE DATABASE ${assertDatabaseIdent(templateName)}`);
+  }
+}
+```
+
+   Clearing the template matters because every clone copies whatever rows are in it. Foreign keys decide the order, so not everything can go in one `Promise.all`. What can run in parallel is independent chains:
+
+```ts
+async function clearTemplateRows(url: string) {
+  const pool = new pg.Pool({ connectionString: url });
+  try {
+    const chains = [
+      // app data: children first because of the foreign keys
+      async () => {
+        await pool.query("DELETE FROM model_calls");
+        await pool.query("DELETE FROM outbound_messages");
+        await pool.query("DELETE FROM messages");
+        await pool.query("DELETE FROM conversations");
+      },
+      // indexed docs
+      async () => {
+        await pool.query("DELETE FROM chunks");
+        await pool.query("DELETE FROM indexes");
+      },
+      // pg-boss jobs, only if the schema exists yet
+      async () => {
+        const { rows } = await pool.query<{ exists: boolean }>(
+          "SELECT to_regclass('pgboss.job') IS NOT NULL AS exists"
+        );
+        if (rows[0]?.exists) await pool.query("DELETE FROM pgboss.job");
+      },
+    ];
+    await Promise.all(chains.map((run) => run()));
+  } finally {
+    await pool.end();
+  }
+}
+```
+
+4. **Replace one database per worker: drops in parallel, clones in serial.**
+
+   Bun's `--parallel` defaults to one worker per CPU core, so I create `os.availableParallelism()` copies. Drops are independent, so each one gets its own connection from a small pool. Clones are not: `CREATE DATABASE ... TEMPLATE` needs the template to have no other sessions, so they go one by one on the admin client, killing any session on the template right before each clone.
+
+```ts
+async function dropWorkerDatabase(client: pg.ClientBase, workerName: string) {
+  await terminateSessions(client, workerName);
+  await client.query(`DROP DATABASE IF EXISTS ${assertDatabaseIdent(workerName)}`);
+}
+
+async function cloneWorkerDatabase(client: pg.Client, templateName: string, workerName: string) {
+  await terminateSessions(client, templateName);
+  await client.query(
+    `CREATE DATABASE ${assertDatabaseIdent(workerName)} TEMPLATE ${assertDatabaseIdent(templateName)}`
+  );
+}
+
+async function replaceWorkerDatabases(admin: pg.Client, templateName: string, workerNames: string[]) {
+  const pool = new pg.Pool({ connectionString: adminUrl, max: workerNames.length });
+  try {
+    await Promise.all(
+      workerNames.map(async (workerName) => {
+        const client = await pool.connect();
+        try {
+          await dropWorkerDatabase(client, workerName);
+        } finally {
+          client.release();
+        }
+      })
+    );
+  } finally {
+    await pool.end();
+  }
+
+  for (const workerName of workerNames) {
+    await cloneWorkerDatabase(admin, templateName, workerName);
+  }
+}
+
+async function main() {
+  if (!adminUrl) throw new Error("Set TEST_ADMIN_DATABASE_URL");
+  const templateName = assertDatabaseIdent(databaseNameFromUrl(templateUrl));
+  if (templateName === DEV_DATABASE_NAME) throw new Error("Refusing the dev database as template");
+  if (WORKER_DATABASE_SUFFIX.test(templateName)) {
+    throw new Error(`Refusing a worker database as the template: ${templateName}`);
+  }
+
+  const workerCount = os.availableParallelism();
+  const workerNames = Array.from({ length: workerCount }, (_, index) =>
+    databaseNameFromUrl(workerDatabaseUrl(templateUrl, String(index + 1)))
+  );
+
+  const admin = new pg.Client({ connectionString: adminUrl });
+  await admin.connect();
+  try {
+    await ensureTemplateExists(admin, templateName);
+    process.env.DATABASE_URL = templateUrl;
+    await migrate();
+    await closePool(); // the template must have no open sessions before cloning
+    await clearTemplateRows(templateUrl);
+    await replaceWorkerDatabases(admin, templateName, workerNames);
+  } finally {
+    await admin.end();
+  }
+
+  console.log(JSON.stringify({ event: "test_database_ready", template: templateName, workerDatabases: workerNames }));
+}
+
+main().catch((error: unknown) => {
+  console.error(JSON.stringify({ event: "test_database_failed", message: String(error) }));
+  process.exit(1);
+});
+```
+
+   Note the order inside `main`: migrate, then clear, then clone. If you clone before clearing, every worker starts with yesterday's rows.
+
+5. **Make every test file use its worker URL, not the template URL.**
+
+   This one bit me. A bunch of test files did `process.env.DATABASE_URL = resolveTestDatabaseUrl()` at the top, or passed that URL straight to pg-boss. Under `--parallel` that writes the shared `app_test` URL back and undoes the whole isolation. All of those call sites switched to:
+
+```ts
+import { databaseUrlForThisProcess } from "./test-database-url";
+
+const databaseUrl = databaseUrlForThisProcess();
+```
+
+   The only file that keeps using the template URL on purpose is the resolver's own test.
+
+6. **Wire the scripts.**
+
+```json
+{
+  "scripts": {
+    "ensure-test-database": "bun packages/tests/ensure-test-database.ts",
+    "test:unit": "turbo run test --filter=!@app/tests",
+    "test:integration": "bun run ensure-test-database && cd packages/tests && bun test --parallel",
+    "test": "bun run test:unit && bun run test:integration"
+  }
+}
+```
+
+   Before, `bun run test` ran the integration package without ever provisioning its database. Now `test` is unit first, then integration with a fresh template and fresh worker copies. `test:unit` still runs alone for the fast loop and for CI without Postgres.
+
+### Gotchas
+
+- **Connections on the template.** Postgres won't copy a database while anything else is connected to it. Your migration pool, a `psql` you left open, a GUI client... That's why `terminateSessions` runs on the template right before every clone, and why the migration pool gets closed before cloning starts.
+- **Clones are serial, drops are parallel.** I tried to make the whole loop concurrent. Apparently that doesn't work: the clone needs the template to itself, so only one `CREATE DATABASE ... TEMPLATE` runs at a time. Dropping the old worker databases is independent, so that part runs in parallel.
+- **`CREATE DATABASE` can't run inside a transaction**, and it can't take `$1` parameters. That's why the names go through `assertDatabaseIdent` before being interpolated.
+- **Clean the pg-boss job table between runs.** Two tests failed because a job count was 3 instead of 1. Ingest wasn't enqueueing three times. The tests' `beforeAll` deleted the messages but not `pgboss.job`, so every run with the same fixed message id added a new job next to the old ones. Now `DELETE FROM pgboss.job` runs both when clearing the template and in the `beforeAll` of the files that count jobs.
+- **Foreign keys decide your cleanup order.** On a fresh worker database `DELETE FROM messages` failed because `model_calls` still referenced those rows. Delete children first.
+- **Tests inside one file still share one database.** `--parallel` splits files, not tests. Don't turn on `test.concurrent` in files that wipe tables.
+- **A fresh database exposes tests that relied on leftovers.** A few tests only passed because some earlier file had left the right rows behind. Once each worker started clean, they failed, and that was a good thing. Each test should set up its own data and clean up after itself, so the next file on that worker doesn't pick it up.
+
+And that's it! Your destructive tests now run on their own copies, in parallel, and your dev database stays where you left it. For a suite that's supposed to protect a RAG pipeline, that's the minimum: the tests should never be the thing that empties the index. I also wrote the whole thing down in the repo's mistakes log, so the next agent (or me) doesn't point the tests at dev again 🫠
+
+##### References
+
+- Bun docs: Parallel and isolated test runs (`--parallel`, `BUN_TEST_WORKER_ID`)
+- PostgreSQL docs: `CREATE DATABASE` (`TEMPLATE`)
