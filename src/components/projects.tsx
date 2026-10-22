@@ -473,10 +473,6 @@ const FreelanceComponent: React.FC<unknown> = () => {
         </li>
         <li>
           Payments through{' '}
-          <a href={'https://stripe.com'} rel='noopener nofollow noreferrer'>
-            Stripe
-          </a>{' '}
-          and{' '}
           <a
             href={'https://www.mercadopago.com'}
             rel='noopener nofollow noreferrer'
@@ -490,8 +486,8 @@ const FreelanceComponent: React.FC<unknown> = () => {
           go out from the same number the brewery already uses.
         </li>
         <li>
-          Stack: Next.js, Stripe, Mercado Pago, WhatsApp Business Cloud API,
-          Cloudflare Workers, Terraform (Cloudflare).
+          Stack: Next.js, Mercado Pago, WhatsApp Business Cloud API, Cloudflare
+          Workers, Terraform (Cloudflare).
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
