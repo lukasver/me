@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
-  metadataBase: new URL('https://lucasverdiell.xyz'),
+  metadataBase: new URL('https://lucasverdiell.dev'),
   alternates: {
     canonical: '/',
     languages: {
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     images: '/og-image.png',
     title: siteConfig.name,
     description: siteConfig.description,
-    url: 'https://lucasverdiell.xyz',
+    url: 'https://lucasverdiell.dev',
   },
 };
 

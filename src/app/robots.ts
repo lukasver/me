@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { DOMAIN } from './sitemap';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,9 +7,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: ['/'],
-        disallow: ['/api/', '/private/'],
+        disallow: ['/api/'],
       },
     ],
-    sitemap: 'https://lucasverdiell.xyz/sitemap.xml',
+    sitemap: `${DOMAIN}/sitemap.xml`,
   };
 }

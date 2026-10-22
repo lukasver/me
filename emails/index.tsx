@@ -38,8 +38,8 @@ const ContactEmailTemplate = (formData: ContactForm) => {
                 <Column>
                   <Heading as='h2' className='text-center text-primary'>
                     A contact form has been submited from{' '}
-                    <Link href='https://lucasverdiell.xyz'>
-                      lucasverdiell.xyz
+                    <Link href='https://lucasverdiell.dev'>
+                      lucasverdiell.dev
                     </Link>
                   </Heading>
                   <Text>

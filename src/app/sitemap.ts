@@ -1,7 +1,7 @@
 import { getBlogPosts } from '@/lib/mdx';
 import { MetadataRoute } from 'next';
 
-export const DOMAIN = 'https://lucasverdiell.xyz';
+export const DOMAIN = 'https://lucasverdiell.dev';
 
 const routes = [
   {

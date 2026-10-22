@@ -11,6 +11,10 @@
     "email": "email dev",
     "typecheck": "bunx tsc --noEmit"
   },
+  "packageManager": "bun@1.4.4",
+  "engines": {
+    "node": ">=24.22.1"
+  },
   "dependencies": {
     "@calcom/embed-react": "^1.5.1",
     "@hookform/resolvers": "^3.3.4",
@@ -49,7 +53,7 @@
     "reading-time": "^1.5.0",
     "remark": "^15.0.1",
     "resend": "^3.2.0",
-    "sharp": "^0.32.6",
+    "sharp": "^0.34.5",
     "sonner": "^1.5.0",
     "sugar-high": "^0.7.0",
     "tailwind-merge": "^2.2.2",
@@ -73,9 +77,7 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3"
   },
-  "pnpm": {
-    "overrides": {
-      "sharp": "^0.34.5"
-    }
+  "overrides": {
+    "sharp": "^0.34.5"
   }
 }
