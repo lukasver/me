@@ -566,23 +566,6 @@ const accordionElements = [
   },
   {
     value: 'item-2',
-    trigger: <TriggerComponent name={'Henry'} src={'/assets/henry.png'} />,
-    content: <HenryComponent />,
-  },
-  {
-    value: 'item-3',
-    trigger: <TriggerComponent name={'UCEL'} src={'/assets/ucel.jpg'} />,
-    content: <UcelComponent />,
-  },
-  {
-    value: 'item-4',
-    trigger: (
-      <TriggerComponent name={'LATAM Airlines'} src={'/assets/latam.png'} />
-    ),
-    content: <LatamComponent />,
-  },
-  {
-    value: 'item-5',
     trigger: (
       <TriggerComponent
         name={'Freelance / Independent'}
@@ -590,6 +573,23 @@ const accordionElements = [
       />
     ),
     content: <FreelanceComponent />,
+  },
+  {
+    value: 'item-3',
+    trigger: <TriggerComponent name={'Henry'} src={'/assets/henry.png'} />,
+    content: <HenryComponent />,
+  },
+  {
+    value: 'item-4',
+    trigger: <TriggerComponent name={'UCEL'} src={'/assets/ucel.jpg'} />,
+    content: <UcelComponent />,
+  },
+  {
+    value: 'item-5',
+    trigger: (
+      <TriggerComponent name={'LATAM Airlines'} src={'/assets/latam.png'} />
+    ),
+    content: <LatamComponent />,
   },
 ];
 
