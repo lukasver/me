@@ -79,7 +79,7 @@ const stacks = [
   { name: 'terraform', label: 'Terraform', type: 'Infrastructure' },
   // Cloud
   { name: 'googlecloud', label: 'GCP', type: 'Cloud' },
-  { name: 'cloudflareworkers', label: 'Cloudflare Workers', type: 'Cloud' },
+  { name: 'cloudflareworkers', label: 'Cloudflare', type: 'Cloud' },
   { name: 'vercel', label: 'Vercel', type: 'Cloud' },
   { name: 'digitalocean', label: 'DigitalOcean', type: 'Cloud' },
   { name: 'railway', label: 'Railway', type: 'Cloud' },
@@ -87,7 +87,7 @@ const stacks = [
   // Frameworks / tools
   { name: 'git', label: 'Git', type: 'Tools' },
   // DevOps
-  { name: 'github', label: 'GitHub actions', type: 'Tools' },
+  { name: 'github', label: 'CI/CD', type: 'Tools' },
   // Testing
   { name: 'vitest', label: 'Vitest', type: 'Unit testing' },
   { name: 'playwright', label: 'Playwright', type: 'E2E testing' },
