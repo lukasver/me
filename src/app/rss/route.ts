@@ -1,4 +1,4 @@
-import { getBlogPosts } from '@/lib/mdx';
+import { compareByPublishedAtDesc, getBlogPosts } from '@/lib/mdx';
 import { DOMAIN } from '../sitemap';
 import { siteConfig } from '@/config/site';
 
@@ -7,12 +7,7 @@ export async function GET() {
   const allBlogs = await getBlogPosts();
 
   const itemsXml = allBlogs
-    .sort((a, b) => {
-      if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
-        return -1;
-      }
-      return 1;
-    })
+    .sort(compareByPublishedAtDesc)
     .map(
       (post) =>
         `<item>
