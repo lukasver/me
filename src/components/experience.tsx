@@ -64,7 +64,7 @@ const experience = [
     company: 'LATAM Airlines Group',
     date: 'November 2013 - August 2020',
     description:
-      'Airport supervisor. Rosario International Airport, Argentina. - 🇦🇷🇨🇱🇧🇷 Airline megacarrier.\nIn charge of airpor procedures and trainings.',
+      'Airport supervisor. Rosario International Airport, Argentina. - 🇦🇷🇨🇱🇧🇷 Airline megacarrier.\nIn charge of airport procedures and trainings.',
     href: 'https://latam.com',
   },
 ];
