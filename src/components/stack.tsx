@@ -5,7 +5,9 @@ function Stack() {
     <div className='grid-dynamic-25 sm:grid-dynamic w-full flex-1 md:mt-2 lg:my-6'>
       {stacks.map(({ name, label, type, icon: iconName }) => {
         const icon = (
-          <i className={`text-secondary devicon-${iconName ?? name}-plain`} />
+          <i
+            className={`text-sm text-secondary sm:text-base devicon-${iconName ?? name}-plain`}
+          />
         );
         const mapping = {
           '1': 'animate-fade-in',
@@ -16,14 +18,16 @@ function Stack() {
         return (
           <div
             className={cn(
-              'flex items-center justify-start gap-2',
+              'flex items-center justify-start gap-1 sm:gap-2',
               mapping[key as keyof typeof mapping]
             )}
             key={name}
           >
             {icon}
             <div className='flex flex-col'>
-              <span className='font-head'>{label}</span>
+              <span className='font-head text-sm leading-tight tracking-tight sm:text-base sm:leading-normal sm:tracking-normal'>
+                {label}
+              </span>
               <i className='text-xs text-jade-300'>{type}</i>
             </div>
           </div>
