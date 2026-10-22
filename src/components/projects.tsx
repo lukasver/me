@@ -397,7 +397,7 @@ const LatamComponent: React.FC<unknown> = () => {
 
 const FreelanceComponent: React.FC<unknown> = () => {
   return (
-    <div>
+    <div className='[&>h4]:mb-2'>
       <h3 className='font-head text-secondary'>Achievements:</h3>
       <Separator />
       <p className='mt-2'>

@@ -66,6 +66,18 @@
       #1a1b29,
       #14141f
     );
+
+    /* sugar-high tokens, github-light (same theme as the shadcn Code Block) */
+    --sh-class: #6f42c1;
+    --sh-identifier: #24292e;
+    --sh-sign: #24292e;
+    --sh-property: #005cc5;
+    --sh-entity: #6f42c1;
+    --sh-jsxliterals: #24292e;
+    --sh-string: #032f62;
+    --sh-keyword: #d73a49;
+    --sh-comment: #6a737d;
+    --sh-space: #24292e;
   }
 
   .dark {
@@ -97,6 +109,18 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+
+    /* sugar-high tokens, github-dark (same theme as the shadcn Code Block) */
+    --sh-class: #b392f0;
+    --sh-identifier: #e1e4e8;
+    --sh-sign: #e1e4e8;
+    --sh-property: #79b8ff;
+    --sh-entity: #b392f0;
+    --sh-jsxliterals: #e1e4e8;
+    --sh-string: #9ecbff;
+    --sh-keyword: #f97583;
+    --sh-comment: #6a737d;
+    --sh-space: #e1e4e8;
   }
 }
 
