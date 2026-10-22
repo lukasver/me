@@ -309,9 +309,6 @@ const databaseUrl = databaseUrlForThisProcess();
 - **Tests inside one file still share one database.** `--parallel` splits files, not tests. Don't turn on `test.concurrent` in files that wipe tables.
 - **A fresh database exposes tests that relied on leftovers.** A few tests only passed because some earlier file had left the right rows behind. Once each worker started clean, they failed, and that was a good thing. Each test should set up its own data and clean up after itself, so the next file on that worker doesn't pick it up.
 
-And that's it! Your destructive tests now run on their own copies, in parallel, and your dev database stays where you left it. For a suite that's supposed to protect a RAG pipeline, that's the minimum: the tests should never be the thing that empties the index. I also wrote the whole thing down in the repo's mistakes log, so the next agent (or me) doesn't point the tests at dev again 🫠
+And that's it! Your destructive tests now run on their own copies, in parallel, and your dev database stays where you left it. For a suite that's supposed to protect a RAG pipeline, that's the minimum: the tests should never be the thing that empties the index.
 
-##### References
-
-- Bun docs: Parallel and isolated test runs (`--parallel`, `BUN_TEST_WORKER_ID`)
-- PostgreSQL docs: `CREATE DATABASE` (`TEMPLATE`)
+Thanks for reading! If this helped you, come say hi on [LinkedIn](https://www.linkedin.com/in/lverdiell) or [X](https://x.com/Lverdiell) 😅
