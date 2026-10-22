@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Marquee } from '@/components/ui/marquee';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getBlogPosts, getTags } from '@/lib/mdx';
+import { compareByPublishedAtDesc, getBlogPosts, getTags } from '@/lib/mdx';
 import { DateTime } from 'luxon';
 
 import { Metadata } from 'next';
@@ -36,7 +36,7 @@ async function BlogPage() {
           </div>
           <ScrollArea className='max-h-[500px] overflow-y-auto'>
             <ul className='space-y-4'>
-              {posts.map((post) => (
+              {[...posts].sort(compareByPublishedAtDesc).map((post) => (
                 <li key={post.slug} className='border-b border-gray-800 pb-4'>
                   <Link
                     href={`/blog/${post.slug}`}

@@ -70,6 +70,16 @@ export function getBlogPosts() {
   ).filter((post) => !post.metadata.draft);
 }
 
+export function compareByPublishedAtDesc(
+  a: { metadata: Metadata },
+  b: { metadata: Metadata }
+): number {
+  if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
+    return -1;
+  }
+  return 1;
+}
+
 export const getTags = (posts: ReturnType<typeof getBlogPosts>) => {
   const allTags = posts.map((post) => post.metadata.tags).flat();
   return Array.from(new Set(allTags)).filter(Boolean);
