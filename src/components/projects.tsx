@@ -74,11 +74,11 @@ const SmatContent: React.FC<unknown> = () => {
         <li className='mt-2'>
           Successfully refactored whole frontend app from Javascript with
           vanilla{' '}
-          <a href={'https://reactjs.org/'} rel='noopener nofollow noreferer'>
+          <a href={'https://reactjs.org/'} rel='noopener nofollow noreferrer'>
             React
           </a>{' '}
           to Typescript with{' '}
-          <a href={'https://playwright.dev/'} rel='noopener nofollow noreferer'>
+          <a href={'https://nextjs.org/'} rel='noopener nofollow noreferrer'>
             NextJS
           </a>{' '}
           (pages router) with code splitting & client side rendering
@@ -89,7 +89,7 @@ const SmatContent: React.FC<unknown> = () => {
         </li>
         <li>
           Implemented automation end-to-end testing with{' '}
-          <a href={'https://playwright.dev/'} rel='noopener nofollow noreferer'>
+          <a href={'https://playwright.dev/'} rel='noopener nofollow noreferrer'>
             Playwright
           </a>{' '}
           leading to an important reduction in bugs & regression issues and
@@ -100,35 +100,35 @@ const SmatContent: React.FC<unknown> = () => {
           warehouse using{' '}
           <a
             href={'https://cloud.google.com/storage'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Cloud Storage
           </a>
           ,{' '}
           <a
             href={'https://cloud.google.com/functions'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Cloud functions
           </a>
           ,{' '}
           <a
             href={'https://cloud.google.com/bigquery'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             BigQuery
           </a>
           ,{' '}
           <a
             href={'https://cloud.google.com/looker'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Looker Studio
           </a>{' '}
           &{' '}
           <a
             href={'https://analytics.google.com/'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Google Analytics
           </a>{' '}
@@ -146,29 +146,29 @@ const SmatContent: React.FC<unknown> = () => {
           In charge of creating and maintaining deployment pipelines with{' '}
           <a
             href={'https://github.com/features/actions'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Github Actions
           </a>
           ,{' '}
-          <a href={'https://www.docker.com'} rel='noopener nofollow noreferer'>
+          <a href={'https://www.docker.com'} rel='noopener nofollow noreferrer'>
             Docker
           </a>
           ,{' '}
           <a
             href={'https://www.portainer.io'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Portainer
           </a>
           ,{' '}
-          <a href={'https://vercel.com'} rel='noopener nofollow noreferer'>
+          <a href={'https://vercel.com'} rel='noopener nofollow noreferrer'>
             Vercel
           </a>
           ,{' '}
           <a
             href={'https://cloud.google.com'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Google Cloud
           </a>{' '}
@@ -177,7 +177,7 @@ const SmatContent: React.FC<unknown> = () => {
         <li>
           <a
             href={'https://cloud.google.com'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Google Cloud
           </a>{' '}
@@ -186,13 +186,13 @@ const SmatContent: React.FC<unknown> = () => {
         <li>
           Developed a multiplatform mobile app using{' '}
           <a
-            href={'https://https://reactnative.dev'}
-            rel='noopener nofollow noreferer'
+            href={'https://reactnative.dev'}
+            rel='noopener nofollow noreferrer'
           >
             React Native
           </a>{' '}
           &{' '}
-          <a href={'https://expo.dev/eas'} rel='noopener nofollow noreferer'>
+          <a href={'https://expo.dev/eas'} rel='noopener nofollow noreferrer'>
             Expo EAS
           </a>
           :{' '}
@@ -204,7 +204,7 @@ const SmatContent: React.FC<unknown> = () => {
 
         <li>
           Designed app's user stories and{' '}
-          <a href={'https://www.figma.com'} rel='noopener nofollow noreferer'>
+          <a href={'https://www.figma.com'} rel='noopener nofollow noreferrer'>
             Figma
           </a>{' '}
           mockups ready for development.{' '}
@@ -212,7 +212,7 @@ const SmatContent: React.FC<unknown> = () => {
         <li>
           Carried out sprint daily and weekly meetings, and sprint plannings
           using{' '}
-          <a href={'https://www.github.com'} rel='noopener nofollow noreferer'>
+          <a href={'https://www.github.com'} rel='noopener nofollow noreferrer'>
             Github
           </a>{' '}
           projects.
@@ -222,12 +222,12 @@ const SmatContent: React.FC<unknown> = () => {
           sales. Used{' '}
           <a
             href={'https://www.postgresql.org'}
-            rel='noopener nofollow noreferer'
+            rel='noopener nofollow noreferrer'
           >
             Postgres
           </a>{' '}
           &{' '}
-          <a href={'https://www.prisma.io'} rel='noopener nofollow noreferer'>
+          <a href={'https://www.prisma.io'} rel='noopener nofollow noreferrer'>
             Prisma ORM
           </a>{' '}
           with NextJS and SSR:{' '}
@@ -238,7 +238,7 @@ const SmatContent: React.FC<unknown> = () => {
         </li>
         <li>
           Implemented an AI chat system that bases its responses from a LLM
-          model with feeded context from custom document files using
+          model with fed context from custom document files using
           <a href={'https://openai.com/'} rel='noopener nofollow'>
             OpenAI
           </a>{' '}
@@ -341,10 +341,10 @@ const LatamComponent: React.FC<unknown> = () => {
       <Separator />
       <div className='list-disc list-inside flex flex-col gap-2 [&>li>a]:text-secondary [&>li>a]:font-semibold'>
         <p className='mt-2'>
-          In charge of coordinating passenger service teams of arround 14 people
+          In charge of coordinating passenger service teams of around 14 people
           and working alongside involved actors such as Customs and Immigrations
           offices, airport authorities, airlines, etc. so as to guarantee an
-          efficient reception, turn-arround, and dispatch of international
+          efficient reception, turn-around, and dispatch of international
           flights at ROS International Airport while delivering an outstanding
           passenger service following airline's standards.
         </p>
