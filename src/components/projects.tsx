@@ -457,7 +457,7 @@ const FreelanceComponent: React.FC<unknown> = () => {
         </li>
         <li>
           Stack: TypeScript, TanStack Start, SQLite, Playwright, DigitalOcean,
-          Terraform (GCP, Vercel).
+          Terraform (DigitalOcean).
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
@@ -491,7 +491,7 @@ const FreelanceComponent: React.FC<unknown> = () => {
         </li>
         <li>
           Stack: Next.js, Stripe, Mercado Pago, WhatsApp Business Cloud API,
-          Cloudflare Workers, Terraform (GCP, Vercel).
+          Cloudflare Workers, Terraform (Cloudflare).
         </li>
       </ul>
       <h4 className='font-head font-bold mt-2'>
