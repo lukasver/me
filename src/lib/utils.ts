@@ -36,3 +36,7 @@ export const shallowPush = ({
 }): void => {
   window.history.pushState({}, '', `${pathname}?${params.toString()}`);
 };
+
+export function postTitleTransitionName(slug: string) {
+  return `post-title-${slug.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+}

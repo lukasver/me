@@ -6,7 +6,8 @@ import { pageAlternates } from '@/lib/seo';
 import { DateTime } from 'luxon';
 
 import { Metadata } from 'next';
-import Link from 'next/link';
+import { postTitleTransitionName } from '@/lib/utils';
+import { Link } from 'next-view-transitions';
 
 const description = 'Thoughts, coding struggles, and experiences.';
 
@@ -51,7 +52,14 @@ async function BlogPage() {
                     href={`/blog/${post.slug}`}
                     className='block hover:text-primary dark:hover:text-muted-foreground transition-colors duration-300'
                   >
-                    <h2 className='text-xl'>{post.metadata.title}</h2>
+                    <h2
+                      className='post-title-transition text-xl w-fit'
+                      style={{
+                        viewTransitionName: postTitleTransitionName(post.slug),
+                      }}
+                    >
+                      {post.metadata.title}
+                    </h2>
                     <div className='flex justify-between items-center'>
                       <time
                         dateTime={post.metadata.publishedAt}
