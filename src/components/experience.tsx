@@ -37,7 +37,7 @@ function Experience({ data = experience }) {
 
 const experience = [
   {
-    name: 'Fullstack developer',
+    name: 'Lead Full Stack Developer / Cloud Engineer',
     company: 'Smat',
     date: 'September 2021 - Present ',
     description:
