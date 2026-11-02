@@ -33,7 +33,7 @@ function Carousel(props: { sources: Source[]; className?: string }) {
       className={cn(props.className, 'w-full max-w-full animate-fade-in')}
     >
       <CarouselContent>
-        {sources.map((el) => (
+        {sources.map((el, index) => (
           <CarouselItem key={String(el.src)}>
             <picture>
               <Card className='p-1'>
@@ -41,10 +41,14 @@ function Carousel(props: { sources: Source[]; className?: string }) {
                   <Image
                     width={420}
                     height={420}
-                    priority={true}
                     sizes='420px'
                     placeholder='blur'
                     {...el}
+                    // Only the first slide is the LCP candidate: preload it with
+                    // high priority and lazy-load the hidden slides.
+                    preload={index === 0}
+                    fetchPriority={index === 0 ? 'high' : undefined}
+                    loading={index === 0 ? undefined : 'lazy'}
                     className='rounded-lg'
                   />
                 </CardContent>

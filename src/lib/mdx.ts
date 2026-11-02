@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
 
-const MetadataSchema = z.object({
+export const MetadataSchema = z.object({
   title: z.string(),
   publishedAt: z.string(),
   summary: z.string(),

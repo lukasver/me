@@ -4,15 +4,9 @@ import { PageProps } from '@/types';
 import { siteConfig } from '@/config/site';
 import Carousel from '@/components/carousel';
 import { getPseudoRandomNumber } from '@/lib/utils';
-import dynamic from 'next/dynamic';
-import { Skeleton } from '@/components/ui/skeleton';
+import DevIcons from '@/components/lazy-dev-icons';
 import Projects from '@/components/projects';
 import { getBase64 } from '@/lib/plaiceholder';
-
-const DevIcons = dynamic(() => import('@/components/dev-icons'), {
-  ssr: false,
-  loading: () => <Skeleton className='h-6 w-6 rounded-full' />,
-});
 
 const getImages = async () => {
   const result = await Promise.all(
@@ -33,6 +27,7 @@ const getImages = async () => {
 };
 
 export default async function RootPage({ searchParams }: PageProps) {
+  const { tab } = await searchParams;
   const sources = await getImages();
 
   return (
@@ -50,12 +45,12 @@ export default async function RootPage({ searchParams }: PageProps) {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col lg:flex-row items-stretch justify-center gap-2 xl:gap-10 animate-fade-in-2'>
+            <div className='flex flex-col lg:flex-row items-stretch justify-center gap-2 xl:gap-10'>
               <div className='grow-0 shrink-0 sm:basis-[420px] sm:max-w-[420px] self-center'>
                 <Carousel sources={sources} />
               </div>
               <div className='flex grow animate-fade-in-3'>
-                <HomeTabs tab={searchParams.tab && String(searchParams.tab)} />
+                <HomeTabs tab={tab && String(tab)} />
               </div>
             </div>
           </Container>
