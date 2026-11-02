@@ -1,0 +1,142 @@
+---
+title: My Worker hit 64 MiB because of a face-tracking library I never used
+summary: After a Next.js upgrade, a Cloudflare Worker built with OpenNext went over the 64 MiB limit. The culprit was the file trace, not my code.
+publishedAt: '2026-11-02'
+tags: ['nextjs', 'cloudflare-workers', 'opennext', 'performance', 'debugging']
+draft: false
+authors: ['Lucas Verdiell']
+---
+
+> **TL;DR:** Next.js file tracing follows every import it can find, including the ones your app never runs. On a Cloudflare Worker that can push you over the 64 MiB limit. Find the big files in the OpenNext server function, figure out why they were traced, and drop them with `outputFileTracingExcludes`.
+
+I was doing some upgrade and hardening work on a client storefront with some 3D product visuals. Next.js on Cloudflare Workers, built with the [OpenNext](https://opennext.js.org/cloudflare) adapter, Prisma on D1, and a few `@react-three/drei` helpers for the 3D bits.
+
+I bumped Next.js to 16.4, fixed the build, deployed to staging and... Wrangler refused the upload. The Worker was over Cloudflare's 64 MiB uncompressed limit.
+
+Nothing new had landed in the app itself. So where did all that weight come from?
+
+## Why it happens
+
+Wrangler only prints the five largest files in the script, and that list was already telling the story:
+
+| File | Size | What it is |
+| --- | --- | --- |
+| `handler.mjs` | 23 MiB | The Next.js server bundle. This one has to stay. |
+| `vision_wasm_internal.wasm` | 9.1 MiB | MediaPipe, used only by drei's face tracking |
+| `vision_wasm_nosimd_internal.wasm` | 8.9 MiB | The same library, the no-SIMD build |
+| `pglite.wasm` | 8.3 MiB | A local Postgres inside `@prisma/dev` |
+| `schema_engine_bg.wasm` | 5.4 MiB | The Prisma CLI migration engine |
+
+Four WebAssembly files, about 32 MiB together, and the Worker runs none of them.
+
+Apparently, a face-tracking library was shipping inside my storefront 🫠
+
+Next.js uses file tracing (`@vercel/nft`) to figure out which files a server function needs. It's static: it follows every `import` and `import()` it can resolve, whether or not that code path ever runs. OpenNext then copies the traced files into the Worker. On a normal Node server that just wastes some disk. On a Worker with a hard size cap, it breaks your deploy.
+
+Here's how each file got in:
+
+- **MediaPipe:** the 3D components import `Float`, `useGLTF`, `Environment` and a few other helpers from `@react-three/drei`. That resolves to the package's `index.js` barrel, which also exports `FaceControls`. `FaceLandmarker.js` dynamically imports `@mediapipe/tasks-vision`, so the trace follows it and copies both wasm builds. The app never uses face tracking.
+- **Prisma:** `@prisma/client` is in `serverExternalPackages`, and it has an optional `prisma` peer. The trace follows `prisma` into `@prisma/dev` (pglite, for `prisma dev`) and into the schema engine. On the Worker the database is D1 through `@prisma/adapter-d1`, so neither file is used at runtime.
+
+## Steps
+
+Quick disclaimer: I didn't hand-write these scripts, my agent did. I just pointed it at the bundle and read the results. Thanks AI for the scripting :P
+
+### 1. Find the big files in the server function
+
+Wrangler only shows the top five, so look at what OpenNext actually put in the server function. A small script that lists everything over 500 KB, sorted by size, is enough:
+
+```python
+import os
+
+root = ".open-next/server-functions/default"
+files = []
+for dirpath, _, names in os.walk(root):
+    for name in names:
+        p = os.path.join(dirpath, name)
+        try:
+            sz = os.path.getsize(p)
+        except OSError:
+            continue
+        if sz > 500_000:
+            files.append((sz, p))
+
+files.sort(reverse=True)
+print(f"files >500KB: {len(files)}")
+print(f"their sum: {sum(s for s, _ in files) / 1024 / 1024:.1f} MiB")
+for sz, p in files[:40]:
+    print(f"{sz / 1024 / 1024:7.2f} MiB  {p.replace(root + '/', '')}")
+```
+
+### 2. Ask the trace why they're there
+
+Every server route gets a `.nft.json` file next to it with the list of traced files. Search those for the heavy packages:
+
+```python
+import glob, json
+
+needles = ("mediapipe", "schema_engine", "pglite", "@prisma/dev", "node_modules/prisma/")
+counts = {n: 0 for n in needles}
+
+files = glob.glob(".next/standalone/.next/server/**/*.nft.json", recursive=True)
+print("nft files", len(files))
+for f in files:
+    traced = json.load(open(f))["files"]
+    for n in needles:
+        if any(n in p for p in traced):
+            counts[n] += 1
+
+print(counts)
+```
+
+If a package shows up there but your code never calls it, it's a tracing problem, not a dependency problem.
+
+### 3. Follow the import chain
+
+Now find who pulls it in. For MediaPipe it was a quick grep inside `node_modules/@react-three/drei`:
+
+```bash
+rg "@mediapipe/tasks-vision" node_modules/@react-three/drei --glob "*.js"
+```
+
+That lands on `web/FaceLandmarker.js`, which is reachable from the `index.js` barrel. For Prisma, check the `peerDependencies` of `@prisma/client` and you'll see the optional `prisma` peer.
+
+### 4. Exclude them with `outputFileTracingExcludes`
+
+In `next.config.ts`:
+
+```ts
+import type { NextConfig } from "next"
+
+const nextConfig: NextConfig = {
+  // ...the rest of your config
+  outputFileTracingExcludes: {
+    "*": [
+      "node_modules/@mediapipe/**",
+      "node_modules/prisma/**",
+      "node_modules/@prisma/dev/**",
+      "node_modules/@electric-sql/**",
+    ],
+  },
+}
+
+export default nextConfig
+```
+
+`@electric-sql/**` is where pglite comes from, so it goes too.
+
+**Don't** exclude `@prisma/client` or `@prisma/adapter-d1`. The SQLite query compiler in the generated client is what D1 actually runs. Remove it and you'll swap a size error for a runtime one.
+
+### 5. Rebuild and check again
+
+Run the OpenNext build, rerun the script from step 1 and confirm the wasm files are gone before you deploy. If you're still over, the next candidates are the non-SQLite query compilers under `node_modules/@prisma/client/runtime/` (`cockroachdb`, `mysql`, `postgresql`, `sqlserver`), which a D1 app doesn't need either.
+
+## Gotchas
+
+- **The Prisma edge docs won't save you here.** Their bundle size advice is to drop the Rust query engine. On Prisma 7 the client compiler is already the default, and with `runtime = "cloudflare"` in the generator you already get the Workers build. The files that blew the limit were the CLI and `prisma dev`, which that guide never ships.
+- **Barrel imports cost more than you think.** Importing one helper from a barrel means the tracer sees the whole barrel. Importing from deeper paths can help, but the exclude list is the reliable fix, because it doesn't depend on how every library is laid out.
+- **Next.js 16.4 + an older OpenNext crashes the Worker.** After the size fix, staging died on every request, even `/favicon.ico`, with `Unexpected loadManifest(/.next/server/preview-props.json) call!`. Next.js 16.4 reads `preview-props.json` while it constructs the server, and `@opennextjs/cloudflare@1.19.11` only inlines the manifests it knows about. Updating to `@opennextjs/cloudflare@1.20.15` fixed it, because that version inlines the file for Next 16.4+. So when you bump Next, bump the adapter too.
+
+And that's it! The tracer is doing its job, it just has no idea what your Worker actually runs. On edge runtimes, check what it copies after every upgrade, because it follows imports your app never touches.
+
+Thanks for reading! If this helped you, come say hi on [LinkedIn](https://www.linkedin.com/in/lverdiell) or [X](https://x.com/Lverdiell) 😅
