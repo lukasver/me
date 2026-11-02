@@ -106,7 +106,7 @@ export default async function Blog({ params }: PageProps<{ slug: string }>) {
             metadata={post.metadata}
             readingTime={Math.max(1, Math.round(readingTime(post.content).minutes))}
           />
-          <article className='prose dark:prose-invert'>
+          <article className='prose dark:prose-invert prose-code:before:content-none prose-code:after:content-none'>
             <CustomMDX source={post.content} />
           </article>
           <hr className='my-4' />

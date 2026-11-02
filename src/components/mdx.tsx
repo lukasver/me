@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { highlight } from 'sugar-high';
+import { highlightCode } from '@/lib/highlighter';
 import React from 'react';
 import remarkGfm from 'remark-gfm';
 
@@ -59,47 +59,24 @@ function RoundedImage(props) {
   return <Image alt={props.alt} className='rounded-lg' {...props} />;
 }
 
-// sugar-high only understands JS-like grammars, so other fenced languages
-// (toml, bash, ...) and inline code render as plain text.
-const HIGHLIGHTED_LANGUAGES = new Set([
-  'js',
-  'jsx',
-  'javascript',
-  'ts',
-  'tsx',
-  'typescript',
-  'json',
-]);
+const PRE_CLASS =
+  'rounded-lg border border-input bg-muted/50 text-foreground dark:bg-input/30';
 
-function Code({ children, className, ...props }) {
-  const language = /language-(\w+)/.exec(className ?? '')?.[1];
-  if (
-    !language ||
-    !HIGHLIGHTED_LANGUAGES.has(language) ||
-    typeof children !== 'string'
-  ) {
-    return (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    );
+// Fenced blocks are highlighted on the server with Shiki, so no highlighter
+// code ships to the client. Inline code and unknown languages stay plain.
+async function Pre({ children, ...props }) {
+  const code = React.isValidElement(children) ? children.props : null;
+  const language = /language-([\w+-]+)/.exec(code?.className ?? '')?.[1];
+  if (language && typeof code.children === 'string') {
+    const html = await highlightCode(code.children, language);
+    if (html) {
+      return <div dangerouslySetInnerHTML={{ __html: html }} />;
+    }
   }
-  const codeHTML = highlight(children);
   return (
-    <code
-      className={className}
-      dangerouslySetInnerHTML={{ __html: codeHTML }}
-      {...props}
-    />
-  );
-}
-
-function Pre(props) {
-  return (
-    <pre
-      {...props}
-      className='rounded-lg border border-input bg-muted/50 text-foreground dark:bg-input/30'
-    />
+    <pre {...props} className={PRE_CLASS}>
+      {children}
+    </pre>
   );
 }
 
@@ -154,7 +131,6 @@ const components = {
   Image: RoundedImage,
   a: CustomLink,
   blockquote: Blockquote,
-  code: Code,
   pre: Pre,
   Table,
   table: GfmTable,
