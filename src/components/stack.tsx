@@ -22,6 +22,7 @@ function Stack() {
               mapping[key as keyof typeof mapping]
             )}
             key={name}
+            suppressHydrationWarning
           >
             {icon}
             <div className='flex flex-col'>
