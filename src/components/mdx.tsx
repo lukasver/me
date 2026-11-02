@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { highlight } from 'sugar-high';
 import React from 'react';
+import remarkGfm from 'remark-gfm';
 
 function Table({ data }) {
   const headers = data.headers.map((header, index) => (
@@ -135,6 +136,14 @@ function createHeading(level) {
   return Heading;
 }
 
+function GfmTable(props) {
+  return (
+    <div className="my-6 w-full overflow-x-auto">
+      <table className="w-full border-collapse text-sm [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_th]:border [&_th]:border-border [&_th]:bg-muted [&_th]:px-3 [&_th]:py-2 [&_th]:text-left" {...props} />
+    </div>
+  );
+}
+
 const components = {
   h1: createHeading(1),
   h2: createHeading(2),
@@ -148,6 +157,7 @@ const components = {
   code: Code,
   pre: Pre,
   Table,
+  table: GfmTable,
 };
 
 export function CustomMDX(props) {
@@ -155,6 +165,16 @@ export function CustomMDX(props) {
     <MDXRemote
       {...props}
       components={{ ...components, ...(props.components || {}) }}
+      options={{
+        ...props.options,
+        mdxOptions: {
+          ...props.options?.mdxOptions,
+          remarkPlugins: [
+            ...(props.options?.mdxOptions?.remarkPlugins || []),
+            remarkGfm,
+          ],
+        },
+      }}
     />
   );
 }
