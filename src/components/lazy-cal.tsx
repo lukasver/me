@@ -34,7 +34,7 @@ function LazyCal() {
   return (
     <section
       aria-labelledby='book-call-heading'
-      className='flex min-h-96 w-full max-w-xl flex-col items-center justify-center gap-4 rounded-xl border bg-card p-8 text-center text-card-foreground shadow shadow-primary/50'
+      className='flex h-auto w-full max-w-xl flex-col items-center gap-4 rounded-xl border bg-card p-8 text-center text-card-foreground shadow shadow-primary/50'
     >
       <h1 id='book-call-heading' className='font-head text-2xl'>
         Let&apos;s talk
