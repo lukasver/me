@@ -80,6 +80,16 @@ async function Pre({ children, ...props }) {
   );
 }
 
+// Headings can contain inline code or links, so collect the plain text from
+// the React children instead of stringifying elements ("[object Object]").
+function getNodeText(node) {
+  if (node == null || typeof node === 'boolean') return '';
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(getNodeText).join('');
+  if (React.isValidElement(node)) return getNodeText(node.props.children);
+  return '';
+}
+
 function slugify(str) {
   return str
     .toString()
@@ -93,11 +103,9 @@ function slugify(str) {
 
 function createHeading(level) {
   const Heading = ({ children }) => {
-    const slug = slugify(children);
-    const ariaLabel =
-      typeof children === 'string'
-        ? `Link to ${children}`
-        : 'Link to this section';
+    const text = getNodeText(children);
+    const slug = slugify(text);
+    const ariaLabel = text ? `Link to ${text}` : 'Link to this section';
     return React.createElement(
       `h${level}`,
       { id: slug },

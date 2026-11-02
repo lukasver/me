@@ -20,7 +20,6 @@ interface ModalProps extends React.ComponentProps<typeof Dialog> {
   title?: string | ReactNode;
   description?: string | ReactNode;
   wrapper?: boolean;
-  onClick?: any;
   className?: string;
 }
 
@@ -46,14 +45,20 @@ function GenericModal({
           e.stopPropagation();
         }}
       >
-        {(title || description) && (
-          <DialogHeader>
-            {title && <DialogTitle>{title}</DialogTitle>}
-            {description && (
-              <DialogDescription>{description}</DialogDescription>
-            )}
-          </DialogHeader>
-        )}
+        <DialogHeader>
+          {title ? (
+            <DialogTitle>{title}</DialogTitle>
+          ) : (
+            <DialogTitle className='sr-only'>Certificate</DialogTitle>
+          )}
+          {description ? (
+            <DialogDescription>{description}</DialogDescription>
+          ) : (
+            <DialogDescription className='sr-only'>
+              Certificate details
+            </DialogDescription>
+          )}
+        </DialogHeader>
         {children}
       </DialogContent>
     </Wrapper>
@@ -90,8 +95,11 @@ function Modal(props: GenericDialogProps) {
   const router = useRouter();
   const onOpenChange = (open: boolean) => {
     if (!open) {
-      if (props.onClose) return props.onClose;
-      return router.back();
+      if (props.onClose) {
+        props.onClose();
+        return;
+      }
+      router.back();
     }
   };
 
@@ -99,8 +107,8 @@ function Modal(props: GenericDialogProps) {
     <GenericModal
       onOpenChange={onOpenChange}
       defaultOpen
-      title={props.title || 'Title'}
-      description={props.description || 'DESCRIPTION'}
+      title={props.title}
+      description={props.description}
       className={cn(
         props.className,
         'mt-10 max-h-screen overflow-y-scroll sm:max-w-max bg-card text-card-foreground'
@@ -119,9 +127,9 @@ export const ModalImage = ({
   ...props
 }: ComponentProps<typeof Image>) => {
   return (
-    <picture className={cn('relative', className)}>
+    <div className={cn('relative', className)}>
       <Image src={src} {...props} />
-    </picture>
+    </div>
   );
 };
 

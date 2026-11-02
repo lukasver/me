@@ -1,7 +1,7 @@
+import { CertificateModalBody } from '@/components/certificate-modal';
 import Modal from '@/components/modal';
 import { PageProps } from '@/types';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
 export default async function ModalTypePage({
   params,
@@ -11,17 +11,11 @@ export default async function ModalTypePage({
   if (!type) {
     notFound();
   }
-  const { title, description } = await searchParams;
+  const { title, description, doc } = await searchParams;
 
   return (
     <Modal title={title} description={description}>
-      {type === 'certifications' ? (
-        <Suspense fallback={'loading...'}>
-          <div>
-            <h1>content</h1>
-          </div>
-        </Suspense>
-      ) : null}
+      {type === 'certifications' ? <CertificateModalBody doc={doc} /> : null}
     </Modal>
   );
 }
