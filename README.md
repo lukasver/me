@@ -33,4 +33,3 @@ There is no `.env.example`. Set these in `.env.local` for local development:
 - `RESEND`: Resend API key used by `src/app/api/emails/send`
 - `FROM`: sender address for contact form emails
 - `TO`: recipient address for contact form emails
-- `NEXT_PUBLIC_GA_MEASUREMENT_ID`: Google Analytics measurement ID (only loaded in production)
