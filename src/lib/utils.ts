@@ -1,20 +1,12 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import localFont from 'next/font/local';
-import { Handlee } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { ExternalToast, toast } from 'sonner';
 
 export const head = localFont({
   src: '../../public/assets/CalSans-SemiBold.woff2',
   variable: '--font-cal',
-});
-
-export const hand = Handlee({
-  subsets: ['latin'],
-  weight: '400',
-  display: 'swap',
-  variable: '--font-hand',
 });
 
 export const sans = GeistSans;

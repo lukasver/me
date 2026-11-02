@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import type { Viewport } from 'next';
 
 import { siteConfig } from '@/config/site';
-import { head, hand, sans, cn } from '@/lib/utils';
+import { head, sans, cn } from '@/lib/utils';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ViewTransitions } from 'next-view-transitions';
@@ -63,7 +63,6 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
           className={cn(
             'min-h-screen bg-background font-sans antialiased',
             head.variable,
-            hand.variable,
             sans.variable
           )}
         >
