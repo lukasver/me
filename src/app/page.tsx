@@ -45,7 +45,7 @@ export default async function RootPage({ searchParams }: PageProps) {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col lg:flex-row items-stretch justify-center gap-2 xl:gap-10 animate-fade-in-2'>
+            <div className='flex flex-col lg:flex-row items-stretch justify-center gap-2 xl:gap-10'>
               <div className='grow-0 shrink-0 sm:basis-[420px] sm:max-w-[420px] self-center'>
                 <Carousel sources={sources} />
               </div>
