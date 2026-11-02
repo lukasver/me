@@ -1,21 +1,26 @@
 import { Metadata } from '@/lib/mdx';
-import { cn } from '@/lib/utils';
+import { cn, postTitleTransitionName } from '@/lib/utils';
 import { DateTime } from 'luxon';
 interface DocsPageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   metadata: Metadata;
   readingTime: number;
+  slug: string;
 }
 
 export function DocsPageHeader({
   metadata,
   readingTime,
+  slug,
   className,
   ...props
 }: DocsPageHeaderProps) {
   return (
     <div className={cn('space-y-4', className)}>
       <div className={'space-y-4'} {...props}>
-        <h1 className='inline-block font-heading text-4xl lg:text-5xl'>
+        <h1
+          className='post-title-transition w-fit font-heading text-4xl lg:text-5xl'
+          style={{ viewTransitionName: postTitleTransitionName(slug) }}
+        >
           {metadata.title}
         </h1>
         {metadata.summary && (

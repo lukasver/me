@@ -163,3 +163,26 @@
     scrollbar-width: none;
   }
 }
+
+.post-title-transition {
+  view-transition-class: post-title;
+}
+
+::view-transition-group(*.post-title) {
+  animation-duration: 350ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(*.post-title),
+::view-transition-new(*.post-title) {
+  height: 100%;
+  object-fit: fill;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

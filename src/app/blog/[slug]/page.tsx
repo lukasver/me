@@ -9,7 +9,7 @@ import { getTableOfContents } from '@/lib/toc';
 import { cn } from '@/lib/utils';
 import { PageProps } from '@/types';
 import { ChevronLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import { notFound } from 'next/navigation';
 import readingTime from 'reading-time';
 
@@ -110,6 +110,7 @@ export default async function Blog({ params }: PageProps<{ slug: string }>) {
         <div className='space-y-4 px-6 '>
           <DocsPageHeader
             metadata={post.metadata}
+            slug={post.slug}
             readingTime={Math.max(1, Math.round(readingTime(post.content).minutes))}
           />
           <article className='prose dark:prose-invert prose-code:before:content-none prose-code:after:content-none'>
