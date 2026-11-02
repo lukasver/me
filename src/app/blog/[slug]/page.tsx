@@ -23,8 +23,13 @@ export async function generateStaticParams() {
   }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = getBlogPosts().find((post) => post.slug === params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = getBlogPosts().find((post) => post.slug === slug);
   if (!post) {
     return {};
   }
@@ -64,11 +69,12 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
 }
 
 export default async function Blog({ params }: PageProps<{ slug: string }>) {
-  if (!params.slug) {
+  const { slug } = await params;
+  if (!slug) {
     notFound();
   }
 
-  const post = await getBlogPosts().find((post) => post.slug === params.slug);
+  const post = await getBlogPosts().find((post) => post.slug === slug);
 
   if (!post) {
     notFound();

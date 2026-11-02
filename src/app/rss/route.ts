@@ -3,6 +3,7 @@ import { DOMAIN } from '../sitemap';
 import { siteConfig } from '@/config/site';
 
 const baseUrl = DOMAIN;
+export const dynamic = 'force-static';
 export async function GET() {
   const allBlogs = await getBlogPosts();
 
