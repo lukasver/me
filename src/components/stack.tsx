@@ -1,9 +1,9 @@
-import { cn, getPseudoRandomNumber } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 function Stack() {
   return (
     <div className='grid-dynamic-25 sm:grid-dynamic w-full flex-1 md:mt-2 lg:my-6'>
-      {stacks.map(({ name, label, type, icon: iconName }) => {
+      {stacks.map(({ name, label, type, icon: iconName }, index) => {
         const icon = (
           <i
             className={`text-sm text-secondary sm:text-base devicon-${iconName ?? name}-plain`}
@@ -14,12 +14,12 @@ function Stack() {
           '2': 'animate-fade-in-2',
           '3': 'animate-fade-in-3',
         } as const;
-        const key = `${getPseudoRandomNumber(3) ?? 1}`;
+        const key = `${(index % 3) + 1}` as keyof typeof mapping;
         return (
           <div
             className={cn(
               'flex items-center justify-start gap-1 sm:gap-2',
-              mapping[key as keyof typeof mapping]
+              mapping[key]
             )}
             key={name}
             suppressHydrationWarning

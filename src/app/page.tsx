@@ -1,12 +1,17 @@
 import Container from '@/components/container';
 import HomeTabs from '@/components/home-tabs';
-import { PageProps } from '@/types';
 import { siteConfig } from '@/config/site';
 import Carousel from '@/components/carousel';
-import { getPseudoRandomNumber } from '@/lib/utils';
 import DevIcons from '@/components/lazy-dev-icons';
 import Projects from '@/components/projects';
-import { getBase64 } from '@/lib/plaiceholder';
+import About from '@/components/about';
+import Experience from '@/components/experience';
+import Stack from '@/components/stack';
+import p1 from '../../public/assets/1.webp';
+import p2 from '../../public/assets/2.webp';
+import p3 from '../../public/assets/3.webp';
+import p4 from '../../public/assets/4.webp';
+import p5 from '../../public/assets/5.webp';
 import {
   PERSON_ID,
   WEBSITE_ID,
@@ -50,28 +55,38 @@ const homeJsonLd = {
   ],
 };
 
-const getImages = async () => {
-  const result = await Promise.all(
-    Array.from({ length: 5 }).map((_, i) => getBase64(`/assets/${i + 1}.webp`))
-  );
-  return result.map(() => {
-    const num = getPseudoRandomNumber(5);
-    const path = `/assets/${num}.webp`;
-    return {
-      src: path,
-      alt: `Lucas photo ${num}`,
-      height: 420,
-      width: 420,
-      placeholder: 'blur' as const,
-      blurDataURL: result[num! - 1],
-    };
-  });
-};
+const education = [
+  {
+    name: 'Fullstack web development bootcamp',
+    company: 'Henry',
+    date: 'August 2021 - December 2021 ',
+    description: 'Remote intensive 4 months bootcamp.',
+    href: 'https://soyhenry.com',
+  },
+  {
+    name: 'AGILE MBA',
+    company: 'LATAM Education',
+    date: 'June 2020 - March 2021 ',
+    description:
+      'Executive Program in Agile Management. Top GPA of the class: 9.4/10',
+    href: 'https://www.latameducation.net',
+  },
+  {
+    name: 'Bachelor degree in Hotel Management',
+    company: 'UCEL - Universidad del Centro Educativo Latinoamericano.',
+    date: 'March 2008 - May 2012',
+    description: 'GPA:  8.77 / 10 - Received the merit award.',
+    href: 'https://www.ucel.edu.ar/',
+  },
+];
 
-export default async function RootPage({ searchParams }: PageProps) {
-  const { tab } = await searchParams;
-  const sources = await getImages();
+const sources = [p1, p2, p3, p4, p5].map((src, i) => ({
+  src,
+  alt: `Lucas photo ${i + 1}`,
+  placeholder: 'blur' as const,
+}));
 
+export default function RootPage() {
   return (
     <>
       <script
@@ -96,7 +111,12 @@ export default async function RootPage({ searchParams }: PageProps) {
                 <Carousel sources={sources} />
               </div>
               <div className='flex grow animate-fade-in-3'>
-                <HomeTabs tab={tab && String(tab)} />
+                <HomeTabs
+                  about={<About />}
+                  experience={<Experience />}
+                  education={<Experience data={education} />}
+                  stack={<Stack />}
+                />
               </div>
             </div>
           </Container>
