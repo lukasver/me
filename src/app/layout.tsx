@@ -10,7 +10,7 @@ import { ViewTransitions } from 'next-view-transitions';
 
 import { Layout } from '@/components/layout';
 
-import { Toaster } from '@/components/ui/sonner';
+import LazyToaster from '@/components/lazy-toaster';
 import Analytics from '@/components/analytics';
 
 export const metadata: Metadata = {
@@ -78,7 +78,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
               <Layout>{children}</Layout>
             </div>
             {modal}
-            <Toaster />
+            <LazyToaster />
             <TailwindIndicator />
           </ThemeProvider>
         </body>

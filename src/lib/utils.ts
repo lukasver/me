@@ -23,24 +23,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getPseudoRandomNumber = (() => {
-  const available = {} as Record<number, boolean>;
-  return (length: number = 5): number | undefined => {
-    if (Object.keys(available).length === 0) {
-      for (let i = 1; i <= length; i++) {
-        available[i] = true;
-      }
-    }
-    const keys = Object.keys(available).map(Number);
-    if (keys.length === 0) return undefined; // No more numbers available
-    const randomIndex = Math.floor(Math.random() * keys.length);
-    const selected = keys[randomIndex];
-
-    delete available[selected];
-    return selected;
-  };
-})();
-
 export const fireToast = (
   title: string,
   description: string,
