@@ -11,7 +11,7 @@ import { ViewTransitions } from 'next-view-transitions';
 import { Layout } from '@/components/layout';
 
 import { Toaster } from '@/components/ui/sonner';
-import Analytics from '@/components/analytics';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: {
@@ -57,7 +57,6 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
     <ViewTransitions>
       <html lang='en' suppressHydrationWarning>
         <head>
-          <Analytics />
           <noscript>
             <meta
               httpEquiv='refresh'
@@ -81,6 +80,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
             <Toaster />
             <TailwindIndicator />
           </ThemeProvider>
+          <Analytics />
         </body>
       </html>
     </ViewTransitions>
