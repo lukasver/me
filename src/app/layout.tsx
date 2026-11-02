@@ -12,6 +12,7 @@ import { Layout } from '@/components/layout';
 
 import { Toaster } from '@/components/ui/sonner';
 import Analytics from '@/components/analytics';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: {
@@ -81,6 +82,7 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
             <Toaster />
             <TailwindIndicator />
           </ThemeProvider>
+          <VercelAnalytics />
         </body>
       </html>
     </ViewTransitions>
