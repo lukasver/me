@@ -24,19 +24,21 @@ export const metadata: Metadata = {
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
-  metadataBase: new URL('https://lucasverdiell.dev'),
-  alternates: {
-    canonical: '/',
-    languages: {
-      'en-US': '/en-US',
-      'en-GB': '/en-GB',
-    },
+  metadataBase: new URL(siteConfig.url),
+  robots: {
+    index: true,
+    follow: true,
+    'max-image-preview': 'large',
+    'max-snippet': -1,
+    'max-video-preview': -1,
   },
   openGraph: {
     images: '/og-image.png',
     title: siteConfig.name,
     description: siteConfig.description,
-    url: 'https://lucasverdiell.dev',
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    type: 'website',
   },
 };
 
@@ -58,12 +60,6 @@ export default function RootLayout({ children, modal }: RootLayoutProps) {
       <html lang='en' suppressHydrationWarning>
         <head>
           <Analytics />
-          <noscript>
-            <meta
-              httpEquiv='refresh'
-              content="0; URL='https://www.youtube.com/watch?v=dQw4w9WgXcQ'"
-            />
-          </noscript>
         </head>
         <body
           className={cn(
