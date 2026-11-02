@@ -21,7 +21,7 @@ async function BlogPage() {
         <div className='space-y-6'>
           <div>
             <h1 className='text-5xl font-bold mb-2 text-primary'>Blog</h1>
-            <p className='text-2xl text-gray-400'>
+            <p className='text-2xl text-muted-foreground'>
               Thoughts, coding struggles, and experiences.
             </p>
           </div>
@@ -46,7 +46,7 @@ async function BlogPage() {
                     <div className='flex justify-between items-center'>
                       <time
                         dateTime={post.metadata.publishedAt}
-                        className='text-sm text-gray-400'
+                        className='text-sm text-muted-foreground'
                       >
                         {DateTime.fromISO(
                           post.metadata.publishedAt

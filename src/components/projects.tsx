@@ -49,7 +49,7 @@ const TriggerComponent = ({ name, src }: { name: string; src: string }) => {
           height={40}
         />
       </picture>
-      <h1 className='font-head text-lg'>{name}</h1>
+      <span className='font-head text-lg'>{name}</span>
     </div>
   );
 };

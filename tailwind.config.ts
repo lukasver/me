@@ -91,10 +91,17 @@ const config: Config = {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
+      textColor: {
+        primary: {
+          DEFAULT: 'hsl(var(--primary-text))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary-text))',
+        },
+      },
       fontFamily: {
         sans: ['var(--font-geist-sans)', ...fontFamily.sans],
         head: ['var(--font-cal)', ...fontFamily.sans],
-        hand: ['var(--font-hand)', ...fontFamily.sans],
       },
       borderRadius: {
         lg: 'var(--radius)',

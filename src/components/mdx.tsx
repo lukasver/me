@@ -94,6 +94,10 @@ function slugify(str) {
 function createHeading(level) {
   const Heading = ({ children }) => {
     const slug = slugify(children);
+    const ariaLabel =
+      typeof children === 'string'
+        ? `Link to ${children}`
+        : 'Link to this section';
     return React.createElement(
       `h${level}`,
       { id: slug },
@@ -102,6 +106,7 @@ function createHeading(level) {
           href: `#${slug}`,
           key: `link-${slug}`,
           className: 'anchor',
+          'aria-label': ariaLabel,
         }),
       ],
       children
