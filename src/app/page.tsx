@@ -7,6 +7,48 @@ import { getPseudoRandomNumber } from '@/lib/utils';
 import DevIcons from '@/components/lazy-dev-icons';
 import Projects from '@/components/projects';
 import { getBase64 } from '@/lib/plaiceholder';
+import {
+  PERSON_ID,
+  WEBSITE_ID,
+  absoluteUrl,
+  pageAlternates,
+  serializeJsonLd,
+} from '@/lib/seo';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  alternates: pageAlternates('/'),
+};
+
+const homeJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': PERSON_ID,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      jobTitle: siteConfig.jobTitle,
+      description: siteConfig.description,
+      image: absoluteUrl('/assets/1.webp'),
+      email: `mailto:${siteConfig.email}`,
+      sameAs: [
+        siteConfig.links.github,
+        siteConfig.links.linkedin,
+        siteConfig.links.twitter,
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': WEBSITE_ID,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      description: siteConfig.description,
+      inLanguage: 'en',
+      publisher: { '@id': PERSON_ID },
+    },
+  ],
+};
 
 const getImages = async () => {
   const result = await Promise.all(
@@ -32,7 +74,11 @@ export default async function RootPage({ searchParams }: PageProps) {
 
   return (
     <>
-      <main className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(homeJsonLd) }}
+      />
+      <div className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>
         <section id='hero' className='dark:bg-gradient h-full'>
           <Container className='flex flex-col gap-4 xl:gap-8 2xl:gap-20 xl:-mt-20 2xl:-mt-40 px-4 mt-4 sm:mt-0'>
             <div className='flex justify-center lg:justify-normal items-center'>
@@ -63,7 +109,7 @@ export default async function RootPage({ searchParams }: PageProps) {
             <Projects />
           </Container>
         </section>
-      </main>
+      </div>
       <DevIcons />
     </>
   );

@@ -7,6 +7,7 @@ import { Button } from './ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { ContactForm } from '@/lib/types';
+import { siteConfig } from '@/config/site';
 
 function Contact() {
   const [loading, setLoading] = useState(false);
@@ -71,8 +72,8 @@ function Contact() {
         </Button>
         <p className='text-sm text-center text-gray-500'>
           or reach out to me at{' '}
-          <a className='text-primary' href='mailto:hello@lucasverdiell.xyz'>
-            hello@lucasverdiell.xyz
+          <a className='text-primary' href={`mailto:${siteConfig.email}`}>
+            {siteConfig.email}
           </a>
         </p>
       </form>

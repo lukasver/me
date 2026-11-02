@@ -6,6 +6,12 @@ import { buttonVariants } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import { getBlogPosts } from '@/lib/mdx';
 import { getTableOfContents } from '@/lib/toc';
+import {
+  PERSON_ID,
+  absoluteUrl,
+  pageAlternates,
+  serializeJsonLd,
+} from '@/lib/seo';
 import { cn } from '@/lib/utils';
 import { PageProps } from '@/types';
 import { ChevronLeft } from 'lucide-react';
@@ -23,6 +29,12 @@ export async function generateStaticParams() {
   }));
 }
 
+function postImageUrl({ image, title }: { image?: string; title: string }) {
+  return image
+    ? absoluteUrl(image)
+    : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -38,20 +50,22 @@ export async function generateMetadata({
     title,
     publishedAt: publishedTime,
     summary: description,
-    image,
+    tags,
   } = post.metadata;
-  const ogImage = image
-    ? image
-    : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+  const ogImage = postImageUrl(post.metadata);
 
   return {
     title,
     description,
+    authors: [{ name: siteConfig.name, url: siteConfig.url }],
+    alternates: pageAlternates(`/blog/${post.slug}`),
     openGraph: {
       title,
       description,
       type: 'article',
       publishedTime,
+      authors: [siteConfig.url],
+      tags,
       url: `${baseUrl}/blog/${post.slug}`,
       images: [
         {
@@ -81,32 +95,36 @@ export default async function Blog({ params }: PageProps<{ slug: string }>) {
   }
 
   const toc = await getTableOfContents(post.content);
+  const postUrl = `${baseUrl}/blog/${post.slug}`;
 
   return (
     <div className='mx-auto max-w-5xl'>
       <script
         type='application/ld+json'
-        suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: serializeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
             headline: post.metadata.title,
+            description: post.metadata.summary,
             datePublished: post.metadata.publishedAt,
             dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `${baseUrl}${post.metadata.image}`
-              : `/og?title=${encodeURIComponent(post.metadata.title)}`,
-            url: `${baseUrl}/blog/${post.slug}`,
+            image: postImageUrl(post.metadata),
+            url: postUrl,
+            mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
+            inLanguage: 'en',
+            keywords: post.metadata.tags,
             author: {
               '@type': 'Person',
+              '@id': PERSON_ID,
               name: siteConfig.name,
+              url: siteConfig.url,
             },
+            publisher: { '@id': PERSON_ID },
           }),
         }}
       />
-      <main className='max-w-3xl relative py-6 lg:grid lg:grid-cols-[1fr_300px] lg:gap-10 lg:py-10 xl:gap-20'>
+      <div className='max-w-3xl relative py-6 lg:grid lg:grid-cols-[1fr_300px] lg:gap-10 lg:py-10 xl:gap-20'>
         <div className='space-y-4 px-6 '>
           <DocsPageHeader
             metadata={post.metadata}
@@ -132,7 +150,7 @@ export default async function Blog({ params }: PageProps<{ slug: string }>) {
             <DashboardTableOfContents toc={toc} />
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

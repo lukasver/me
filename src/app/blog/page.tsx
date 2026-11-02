@@ -2,14 +2,25 @@ import { Badge } from '@/components/ui/badge';
 import { Marquee } from '@/components/ui/marquee';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { compareByPublishedAtDesc, getBlogPosts, getTags } from '@/lib/mdx';
+import { pageAlternates } from '@/lib/seo';
 import { DateTime } from 'luxon';
 
 import { Metadata } from 'next';
 import { postTitleTransitionName } from '@/lib/utils';
 import { Link } from 'next-view-transitions';
 
+const description = 'Thoughts, coding struggles, and experiences.';
+
 export const metadata: Metadata = {
   title: 'Blog',
+  description,
+  alternates: pageAlternates('/blog'),
+  openGraph: {
+    title: 'Blog',
+    description,
+    url: '/blog',
+    images: '/og-image.png',
+  },
 };
 
 async function BlogPage() {
@@ -22,9 +33,7 @@ async function BlogPage() {
         <div className='space-y-6'>
           <div>
             <h1 className='text-5xl font-bold mb-2 text-primary'>Blog</h1>
-            <p className='text-2xl text-gray-400'>
-              Thoughts, coding struggles, and experiences.
-            </p>
+            <p className='text-2xl text-gray-400'>{description}</p>
           </div>
           <div>
             <Marquee pauseOnHover className='[--duration:60s]'>
