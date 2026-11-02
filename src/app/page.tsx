@@ -12,6 +12,48 @@ import p2 from '../../public/assets/2.webp';
 import p3 from '../../public/assets/3.webp';
 import p4 from '../../public/assets/4.webp';
 import p5 from '../../public/assets/5.webp';
+import {
+  PERSON_ID,
+  WEBSITE_ID,
+  absoluteUrl,
+  pageAlternates,
+  serializeJsonLd,
+} from '@/lib/seo';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  alternates: pageAlternates('/'),
+};
+
+const homeJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': PERSON_ID,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      jobTitle: siteConfig.jobTitle,
+      description: siteConfig.description,
+      image: absoluteUrl('/assets/1.webp'),
+      email: `mailto:${siteConfig.email}`,
+      sameAs: [
+        siteConfig.links.github,
+        siteConfig.links.linkedin,
+        siteConfig.links.twitter,
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': WEBSITE_ID,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      description: siteConfig.description,
+      inLanguage: 'en',
+      publisher: { '@id': PERSON_ID },
+    },
+  ],
+};
 
 const education = [
   {
@@ -47,7 +89,11 @@ const sources = [p1, p2, p3, p4, p5].map((src, i) => ({
 export default function RootPage() {
   return (
     <>
-      <main className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(homeJsonLd) }}
+      />
+      <div className='min-h-screen h-[unset] md:h-screen lg:snap-y lg:snap-mandatory overflow-y-scroll'>
         <section id='hero' className='dark:bg-gradient h-full'>
           <Container className='flex flex-col gap-4 xl:gap-8 2xl:gap-20 xl:-mt-20 2xl:-mt-40 px-4 mt-4 sm:mt-0'>
             <div className='flex justify-center lg:justify-normal items-center'>
@@ -83,7 +129,7 @@ export default function RootPage() {
             <Projects />
           </Container>
         </section>
-      </main>
+      </div>
       <DevIcons />
     </>
   );

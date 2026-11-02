@@ -79,7 +79,8 @@ function HomeTabs(slots: HomeTabsSlots) {
         <TabsContent
           key={name}
           value={name}
-          className={cn('flex w-full flex-1')}
+          forceMount
+          className={cn('flex w-full flex-1 data-[state=inactive]:hidden')}
         >
           {panels[name]}
         </TabsContent>

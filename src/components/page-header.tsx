@@ -1,4 +1,6 @@
+import { siteConfig } from '@/config/site';
 import { Metadata } from '@/lib/mdx';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { DateTime } from 'luxon';
 interface DocsPageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -23,9 +25,18 @@ export function DocsPageHeader({
         )}
       </div>
       <div className='flex gap-2 justify-between'>
-        <time dateTime={metadata.publishedAt} className='text-sm flex-shrink-0'>
-          Posted {DateTime.fromISO(metadata.publishedAt).toRelative()}
-        </time>
+        <p className='text-sm flex-shrink-0'>
+          By{' '}
+          <Link href='/' rel='author' className='hover:text-primary'>
+            {siteConfig.name}
+          </Link>{' '}
+          on{' '}
+          <time dateTime={metadata.publishedAt}>
+            {DateTime.fromISO(metadata.publishedAt, { zone: 'utc' })
+              .setLocale('en-US')
+              .toLocaleString(DateTime.DATE_FULL)}
+          </time>
+        </p>
         <span className='truncate text-sm'>{readingTime} min read</span>
       </div>
       <hr className='my-4' />

@@ -12,9 +12,9 @@ function Container({
   ref?: Ref<HTMLDivElement>;
 }) {
   return (
-    <main ref={ref} className={cn('mx-auto md:container', className)}>
+    <div ref={ref} className={cn('mx-auto md:container', className)}>
       {children}
-    </main>
+    </div>
   );
 }
 
