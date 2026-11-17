@@ -8,7 +8,7 @@ draft: false
 authors: ['Lucas Verdiell']
 ---
 
-<Image src="/blog/agent-fleet-lock/1-problem-1200x630.jpg" alt="Doodle of robot agents fighting over the same task, tangled git branches and a 'port 3000 taken' sign" width={1200} height={630} priority />
+<Image src="/blog/agent-fleet-lock/1-problem-1200x630.jpg" alt="Doodle of robot agents fighting over the same task, tangled git branches and a 'port 3000 taken' sign" width="1200" height="630" priority />
 
 > **TL;DR:** A git worktree gives each agent its own copy of the code, and nothing else. My agents still clashed over ports, databases, Docker containers and which plan to work on. What fixed most of it: claim a plan on a separate git branch with a normal push, compute each plan's status instead of storing it, give each worktree its own ports and database, and make every agent stop what it starts.
 
@@ -60,7 +60,7 @@ Our publish script rebuilds the plan index from the plan files on `main`, so the
 
 So the claims needed a place the publish script doesn't rebuild. A separate branch was the simplest place I could find.
 
-<Image src="/blog/agent-fleet-lock/v1-marker-1200x630.jpg" alt="Doodle of a robot putting a 'claimed!' padlock on a git branch while other robots wait" width={1200} height={630} />
+<Image src="/blog/agent-fleet-lock/v1-marker-1200x630.jpg" alt="Doodle of a robot putting a 'claimed!' padlock on a git branch while other robots wait" width="1200" height="630" />
 
 ## Steps
 
@@ -157,7 +157,7 @@ Looking back, each problem needed its own fix. Worktrees kept the code apart but
 
 There are still a few things to resolve, but they're a different kind of problem now. Two agents no longer start the same plan, so orchestration isn't what slows me down anymore. Bookkeeping and cleanup are. I release stale claims and leftover slot leases by hand, because I chose claims that don't expire. Worktrees still pile up: one morning I had dozens and had to ask an agent which ones were merged and idle. With three linked slots, a fourth local agent waits until I stop one. And a claim covers a plan, not files, so two related plans can still edit the same files and conflict at merge. Next on my list is getting cloud agents and Grok Bots to claim through the same branch. The claim is a plain file in git, so i think that part needs no new system, just the same scripts.
 
-<Image src="/blog/agent-fleet-lock/3-improvement-1200x630.jpg" alt="Doodle of robots working calmly on their own branches and slots around a padlocked claims branch" width={1200} height={630} />
+<Image src="/blog/agent-fleet-lock/3-improvement-1200x630.jpg" alt="Doodle of robots working calmly on their own branches and slots around a padlocked claims branch" width="1200" height="630" />
 
 And that's it! Worktrees separate checkouts, slots separate ports and databases, and a claim on a branch keeps two agents off one plan. You need all three, plus cleanup. The claim is a JSON file on a branch, so any agent that can push to the repo can use it, wherever it runs: my Mac mini, a Cursor VM or a Grok Bot's machine.
 

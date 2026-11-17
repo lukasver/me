@@ -3,7 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { highlightCode } from '@/lib/highlighter';
-import React from 'react';
+import React, { type ComponentProps } from 'react';
+import { cn } from '@/lib/utils';
 import remarkGfm from 'remark-gfm';
 
 function Table({ data }) {
@@ -55,8 +56,41 @@ function Blockquote(props) {
   );
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className='rounded-lg' {...props} />;
+type RoundedImageProps = Omit<
+  ComponentProps<typeof Image>,
+  'alt' | 'width' | 'height'
+> & {
+  alt: string;
+  width?: string | number;
+  height?: string | number;
+};
+
+function toImageDimension(
+  value: string | number | undefined
+): number | undefined {
+  if (value == null || value === '') {
+    return undefined;
+  }
+  const parsed = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function RoundedImage({
+  alt,
+  width,
+  height,
+  className,
+  ...props
+}: RoundedImageProps) {
+  return (
+    <Image
+      alt={alt}
+      width={toImageDimension(width)}
+      height={toImageDimension(height)}
+      className={cn('h-auto w-full rounded-lg', className)}
+      {...props}
+    />
+  );
 }
 
 const PRE_CLASS =
