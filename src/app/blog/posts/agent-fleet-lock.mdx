@@ -1,0 +1,164 @@
+---
+title: "More worktrees aren't enough: orchestrating agents across different harnesses"
+summary: "Running local Cursor agents, Cursor cloud agents and Grok Bots at the same time means nobody knows what's in progress. Here's how a claims branch on GitHub became the lock."
+image: /blog/agent-fleet-lock/1-problem-1200x630.jpg
+publishedAt: '2026-11-17'
+tags: ['agents', 'cursor', 'git', 'devtools']
+draft: false
+authors: ['Lucas Verdiell']
+---
+
+<Image src="/blog/agent-fleet-lock/1-problem-1200x630.webp" alt="Doodle of robot agents fighting over the same task, tangled git branches and a 'port 3000 taken' sign" width="1200" height="630" priority />
+
+> **TL;DR:** A git worktree gives each agent its own copy of the code, and nothing else. My agents still clashed over ports, databases, Docker containers and which plan to work on. What fixed most of it: claim a plan on a separate git branch with a normal push, compute each plan's status instead of storing it, give each worktree its own ports and database, and make every agent stop what it starts.
+
+## My setup
+
+Most of this runs on my Mac mini, an M4 Pro with 64 GB of RAM. That's enough memory to run several agents, each with its own app and Docker containers, at once, which is how I got into this mess 🫠
+
+I use three kinds of agents, and each one sees a different slice of the world:
+
+1. **Local Cursor agents.** They run inside Cursor on the Mac mini. They can see my disk, my running Docker containers and every port in use on the machine.
+2. **Cursor cloud agents.** Cursor starts each one on a fresh virtual machine in the cloud. It clones the repo from GitHub, works on a branch and opens a PR. It can't see my Mac at all.
+3. **Grok Bots.** Chat agents that each run on their own cloud machine with one job I gave them. They see the tools and repos I connect, and the context I put in the chat.
+
+The local and cloud agents both run on my Cursor subscription. Grok Bots sit outside Cursor.
+
+To let several local agents work on one repo, I give each one its own git worktree. A worktree is an extra folder checked out from the same repo on its own branch, so two agents never edit the same files on disk.
+
+## The problem: nobody knew what was in progress
+
+Writing code is no longer the slow part. The slow part is getting all three kinds of agents to work toward one goal, or a few goals at once, without breaking each other's work. A local agent can't tell that a cloud agent started the same plan an hour ago. A cloud agent can't tell that ports 3000 to 3004 are taken on my Mac. A Grok Bot only knows what I told it. Only I knew the full picture, and mostly in my head.
+
+Most of this happened at work, in our monorepo. We write each piece of work as a numbered plan, and I gave every plan its own agent, worktree and branch. The worktrees kept the code apart, but the agents still shared one machine, one set of ports and one list of plans, and they started to collide.
+
+Some context on the project helps here. It runs as a Docker Compose stack: several apps, an API, workers and their databases, each on its own port. Every agent that wants to test its changes has to bring up that whole stack. On one machine, two copies of the stack can't use the same ports.
+
+So first, ports. One agent couldn't even start the app, because another worktree's stack already held ports 3000 to 3004.
+
+Then a lock file that nobody deleted. A "revise this PR" job used a local lock file so only one run used the app at a time. Its release step ran `rm -f` with a relative path from the wrong directory. The command exited 0, the file stayed, and the next run refused to start.
+
+Verification runs started Docker containers and never stopped them. Even after I added separate stack slots (step 4 below), one run failed with "no free dev stack slot": other worktrees held all three slots, and an agent that crashed on startup had left its lease file on the main slot, so that slot looked taken too.
+
+And two related plans opened PRs that edited the same files and conflicted at merge. Worktrees don't help there at all.
+
+## What I tried first
+
+My first question was how one agent could know when another had finished, or was about to touch the same thing. I tried two tools for that.
+
+The first was poteto's [pstack](https://github.com/cursor/plugins/tree/main/pstack), mostly its `/swarm` command, which starts one agent per plan, each in its own worktree. The second was Cursor's Orchestrate plugin (`/orchestrate`), which splits a big task across cloud agents. Both work inside a single run, because one coordinator starts and tracks every agent. Across runs, a `/swarm` run on my Mac has no idea what a cloud agent started an hour ago, or what a Grok Bot is doing right now.
+
+So I thought about building our own messaging system, where agents post "starting plan 42" and "done with plan 42". I didn't build one, and i think the reason is simple: every agent I run can already `git fetch` and `git push`, and GitHub is the one service they all share. A messaging system would be one more service to host, secure and teach every agent. Git already rejects a push when someone else pushed first, and a lock needs nothing more than that.
+
+That gave me the direction: keep the "who is working on what" record in git, where every kind of agent can read and write it.
+
+## Why writing IN_PROGRESS on main doesn't work
+
+The obvious version of that idea: when an agent starts a plan, it writes `IN_PROGRESS` into the plan's status on `main` and pushes.
+
+Our publish script rebuilds the plan index from the plan files on `main`, so the next publish after any merge erased every `IN_PROGRESS`. An agent replayed this in a throwaway repo: merging an unrelated plan deleted a claim, and a second agent could then start the same plan.
+
+So the claims needed a place the publish script doesn't rebuild. A separate branch was the simplest place I could find.
+
+<Image src="/blog/agent-fleet-lock/v1-marker-1200x630.webp" alt="Doodle of a robot putting a 'claimed!' padlock on a git branch while other robots wait" width="1200" height="630" />
+
+## Steps
+
+Same disclaimer as last time: my agents wrote most of the scripts, I made the calls and argued about edge cases. Thanks AI for the scripting, again :P The snippets are simplified examples, not our real code.
+
+### 1. Put claims on their own branch, and claim before creating the worktree
+
+A separate branch (call it `coordination`) holds one file, `state.json`. Claims live in their own map, and the publish script copies that map forward instead of rebuilding it:
+
+```json
+{
+  "claims": {
+    "42": {
+      "agent": "local-cursor",
+      "branch": "feat/42-export-retry",
+      "pr": null,
+      "claimedAt": "2026-01-01T10:00:00Z"
+    }
+  }
+}
+```
+
+Git already gives you compare-and-swap, meaning "write only if nobody changed it since I read it": GitHub rejects a `git push` without `--force` if someone pushed first. So the script fetches, checks again, and retries:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+PLAN="$1"; BRANCH="$2"
+DIR=$(mktemp -d)
+git clone --quiet --branch coordination --single-branch "$(git remote get-url origin)" "$DIR"
+cd "$DIR"
+
+for attempt in 1 2 3; do
+  git fetch --quiet origin coordination
+  git reset --quiet --hard origin/coordination
+  if jq -e --arg p "$PLAN" '.claims[$p]' state.json > /dev/null; then
+    echo "plan $PLAN is already claimed"; exit 1
+  fi
+  jq --arg p "$PLAN" --arg b "$BRANCH" --arg t "$(date -u +%FT%TZ)" \
+    '.claims[$p] = {agent: "local-cursor", branch: $b, pr: null, claimedAt: $t}' \
+    state.json > state.tmp && mv state.tmp state.json
+  git commit --quiet -am "claim $PLAN"
+  # no --force: rejected if someone else pushed first
+  if git push --quiet origin HEAD:coordination; then
+    echo "claimed $PLAN"; exit 0
+  fi
+done
+echo "could not claim $PLAN, try again later"; exit 1
+```
+
+An agent claims first and only then runs `git worktree add`, and a cloud run claims before it starts its agents. Only the claim, release and publish scripts write to `coordination`, because an agent editing `state.json` by hand can delete another agent's claim.
+
+### 2. Compute the status, don't store it
+
+`IN_PROGRESS` never goes into the plan files on `main`, so it can't go stale there. The publish script picks each plan's status in this order:
+
+1. `main` says done (or folded, see step 6): that wins, and the script drops the claim.
+2. A claim exists: in progress, with its branch and PR.
+3. Otherwise: todo.
+
+Before shipping, I checked these rules with TLA+ and TLC, a tool that tries every possible order of steps in a model of the system. With claims copied forward, TLC found no way for two agents to work the same plan. With the old script, TLC found the dropped claim from the previous section. Since then, agents have hit "already claimed on another branch" and picked the next plan.
+
+### 3. Stale claims don't expire on their own
+
+I chose this. A crashed agent's claim stays until someone releases it by hand, and the status command prints each claim's age. With a timeout, the plan would look free and a second agent would start on top of a half-done branch. I'd rather see an old claim and decide. An agent I stop also keeps its claim, along with its draft PR.
+
+### 4. Give each worktree a stack slot
+
+Claims keep agents off the same plan, but local agents still fight over ports and the database. So the main checkout keeps the usual ports (slot 0), and each linked worktree takes the next free slot, 1 to 3, with its own ports and database. A lease file stops two worktrees from taking the same slot:
+
+```ts
+// slot 0 = main checkout, default ports
+// slot 1..3 = linked worktrees, shifted ports + own DB
+function portsFor(slot: number) {
+  if (slot === 0) return { web: 3000, api: 3001, db: "app_dev" }
+  const base = 40000 + slot * 100
+  return { web: base, api: base + 1, db: `app_dev_slot${slot}` }
+}
+```
+
+Linked stacks don't read from the shared message queue, so they don't steal the main stack's messages. A branch with new database migrations refuses to start on the shared dev database.
+
+### 5. The agent that starts a stack stops it
+
+Verification now ends with a required step: stop the containers you started, and check that `docker ps` shows nothing for that project. For lock files, the agent gets the absolute path with `git rev-parse --show-toplevel`, deletes the file, and checks that the file is gone. Don't trust the exit code.
+
+### 6. Use labels that mean one thing
+
+Our PR reports used to say "mergeable", which GitHub already uses for "no conflicts". Now a run reports READY or BLOCKED. READY means the run found no product bug and no conflicts, and CI gets its own separate line. Plans also got a FOLDED status for work merged into an epic branch but not into `main` yet, so the index stops showing finished work as todo.
+
+## Conclusion
+
+Looking back, each problem needed its own fix. Worktrees kept the code apart but did nothing for ports, containers or the plan list, so more worktrees just meant more agents colliding on one machine. What helped was writing down who owns what in a place every agent can reach, and making each agent clean up after itself.
+
+There are still a few things to resolve, but they're a different kind of problem now. Two agents no longer start the same plan, so orchestration isn't what slows me down anymore. Bookkeeping and cleanup are. I release stale claims and leftover slot leases by hand, because I chose claims that don't expire. Worktrees still pile up: one morning I had dozens and had to ask an agent which ones were merged and idle. With three linked slots, a fourth local agent waits until I stop one. And a claim covers a plan, not files, so two related plans can still edit the same files and conflict at merge. Next on my list is getting cloud agents and Grok Bots to claim through the same branch. The claim is a plain file in git, so i think that part needs no new system, just the same scripts.
+
+<Image src="/blog/agent-fleet-lock/3-improvement-1200x630.webp" alt="Doodle of robots working calmly on their own branches and slots around a padlocked claims branch" width="1200" height="630" />
+
+And that's it! Worktrees separate checkouts, slots separate ports and databases, and a claim on a branch keeps two agents off one plan. You need all three, plus cleanup. The claim is a JSON file on a branch, so any agent that can push to the repo can use it, wherever it runs: my Mac mini, a Cursor VM or a Grok Bot's machine.
+
+Thanks for reading! If this helped you, come say hi on [LinkedIn](https://www.linkedin.com/in/lverdiell) or [X](https://x.com/Lverdiell) 😅
