@@ -8,8 +8,6 @@ draft: false
 authors: ['Lucas Verdiell']
 ---
 
-# More worktrees weren't enough, so I put a lock on a git branch
-
 <Image src="/blog/agent-fleet-lock/1-problem.jpg" alt="Doodle of robot agents fighting over the same task, tangled git branches and a 'port 3000 taken' sign" width={1280} height={720} priority />
 
 > **TL;DR:** A git worktree only gives an agent its own checkout. Agents still clash over ports, databases, containers and plans. Claim plans on a separate git branch with a normal push, compute status instead of storing it, give each worktree its own ports and database, and make each agent stop what it starts.
