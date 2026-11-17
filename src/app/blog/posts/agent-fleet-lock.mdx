@@ -1,0 +1,150 @@
+---
+title: "More worktrees weren't enough, so I put a lock on a git branch"
+summary: "Running local Cursor agents, Cursor cloud agents and Grok Bots at the same time means nobody knows what's in progress. Here's how a claims branch on GitHub became the lock."
+image: /blog/agent-fleet-lock/1-problem-1200x630.jpg
+publishedAt: '2026-11-17'
+tags: ['agents', 'cursor', 'git', 'devtools']
+draft: false
+authors: ['Lucas Verdiell']
+---
+
+# More worktrees weren't enough, so I put a lock on a git branch
+
+<Image src="/blog/agent-fleet-lock/1-problem.jpg" alt="Doodle of robot agents fighting over the same task, tangled git branches and a 'port 3000 taken' sign" width={1280} height={720} priority />
+
+> **TL;DR:** A git worktree only gives an agent its own checkout. Agents still clash over ports, databases, containers and plans. Claim plans on a separate git branch with a normal push, compute status instead of storing it, give each worktree its own ports and database, and make each agent stop what it starts.
+
+I run three kinds of agents at once:
+
+1. **Local Cursor agents** on my Mac mini, each in its own git worktree and branch.
+2. **Cursor cloud agents**, each on its own VM.
+3. **Grok Bots**, each with its own job.
+
+The first two run on my Cursor subscription. The hard part is no longer writing code. It's getting all three to work toward one goal, or several, without breaking each other's work. A local agent sees my disk, a cloud agent sees a fresh VM and GitHub, a bot sees what I told it, and none sees the others. So only I knew what was in progress 🫠
+
+## What actually broke
+
+Most of this happened at work, in our monorepo, where I gave every plan its own agent, worktree and branch. Then the agents started to collide:
+
+- **Ports.** One agent couldn't run the app because another worktree's stack held ports 3000 to 3004.
+- **A lock file nobody deleted.** A "revise this PR" job used a local lock file. The release step ran `rm -f` with a relative path from the wrong directory. It exited 0, the file stayed, and the next run refused to start.
+- **Leftover Docker stacks.** Verification runs started containers and never stopped them.
+- **No free slots.** Even with stack slots (step 4), a verification run got "no free dev stack slot": other worktrees held every slot, and a dead start had left its lease file behind.
+- **Same files, different plans.** Two related plans opened PRs that edited the same files and conflicted.
+
+## What I tried first
+
+I tried a few ways to tell an agent when another had finished or was about to conflict: poteto's [pstack](https://github.com/cursor/plugins/tree/main/pstack), mostly `/swarm` to start one agent per plan on its own worktree, and Cursor's Orchestrate plugin (`/orchestrate`), which splits a big task across cloud agents. Both work within one run, because one coordinator tracks every agent. But a `/swarm` run on my Mac doesn't know what a cloud agent started an hour ago, or what a bot is doing.
+
+I thought about building our own messaging system, where agents post "starting X" and "done with X". I didn't, and i think the reason is simple: every agent I run can already `git fetch` and `git push`, and GitHub is the one service they all share. A messaging system is one more service to host and secure. Git already rejects a push when someone else pushed first, and a lock needs nothing more.
+
+## Why writing IN_PROGRESS doesn't work
+
+My first idea: when an agent starts a plan, it writes `IN_PROGRESS` into the plan's status and pushes.
+
+But our publish script rebuilds the plan index from the plan files on `main`, so the next publish after any merge erased every `IN_PROGRESS`. An agent replayed this in a throwaway repo: merging an unrelated plan deleted a claim, so a second agent could start the same plan.
+
+<Image src="/blog/agent-fleet-lock/v1-marker.jpg" alt="Doodle of a robot putting a 'claimed!' padlock on a git branch while other robots wait" width={1280} height={720} />
+
+## Steps
+
+Same disclaimer as last time: my agents wrote most of the scripts, I made the calls and argued about edge cases. Thanks AI for the scripting, again :P The snippets are simplified examples, not our real code.
+
+### 1. Put claims on their own branch, and claim before creating the worktree
+
+A separate branch (call it `coordination`) holds one file, `state.json`. Claims live in their own map, and the publish script copies that map forward instead of rebuilding it:
+
+```json
+{
+  "claims": {
+    "42": {
+      "agent": "local-cursor",
+      "branch": "feat/42-export-retry",
+      "pr": null,
+      "claimedAt": "2026-01-01T10:00:00Z"
+    }
+  }
+}
+```
+
+Git already gives you compare-and-swap, meaning "write only if nobody changed it since I read it": GitHub rejects a `git push` without `--force` if someone pushed first. So the script fetches, checks again, and retries:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+PLAN="$1"; BRANCH="$2"
+DIR=$(mktemp -d)
+git clone --quiet --branch coordination --single-branch "$(git remote get-url origin)" "$DIR"
+cd "$DIR"
+
+for attempt in 1 2 3; do
+  git fetch --quiet origin coordination
+  git reset --quiet --hard origin/coordination
+  if jq -e --arg p "$PLAN" '.claims[$p]' state.json > /dev/null; then
+    echo "plan $PLAN is already claimed"; exit 1
+  fi
+  jq --arg p "$PLAN" --arg b "$BRANCH" --arg t "$(date -u +%FT%TZ)" \
+    '.claims[$p] = {agent: "local-cursor", branch: $b, pr: null, claimedAt: $t}' \
+    state.json > state.tmp && mv state.tmp state.json
+  git commit --quiet -am "claim $PLAN"
+  # no --force: rejected if someone else pushed first
+  if git push --quiet origin HEAD:coordination; then
+    echo "claimed $PLAN"; exit 0
+  fi
+done
+echo "could not claim $PLAN, try again later"; exit 1
+```
+
+Agents claim first, then run `git worktree add`, and a cloud run claims before it starts its agents. Only the claim, release and publish scripts write to `coordination`, because an agent editing `state.json` by hand can delete another agent's claim.
+
+### 2. Compute the status, don't store it
+
+`IN_PROGRESS` never goes into the plan files on `main`, so it can't go stale there. The publish script picks each plan's status in this order:
+
+1. `main` says done (or folded, see step 6): that wins, and the script drops the claim.
+2. A claim exists: in progress, with its branch and PR.
+3. Otherwise: todo.
+
+Before shipping, I checked these rules with TLA+ and TLC, a tool that tries every possible order of steps in a model. With claims copied forward, TLC found no way for two agents to work the same plan. With the old script, TLC found the dropped claim from above. Now agents hit "already claimed on another branch" and pick the next plan.
+
+### 3. Stale claims don't expire on their own
+
+I chose this. A crashed agent's claim stays until someone releases it by hand, and the status command prints each claim's age. With a timeout, the plan would look free and a second agent would start on top of a half-done branch. I'd rather see an old claim and decide. An agent I stop also keeps its claim, with its draft PR.
+
+### 4. Give each worktree a stack slot
+
+The main checkout keeps the usual ports (slot 0). Each linked worktree takes the next free slot, 1 to 3, with its own ports and database. A lease file stops two worktrees from taking the same slot:
+
+```ts
+// slot 0 = main checkout, default ports
+// slot 1..3 = linked worktrees, shifted ports + own DB
+function portsFor(slot: number) {
+  if (slot === 0) return { web: 3000, api: 3001, db: "app_dev" }
+  const base = 40000 + slot * 100
+  return { web: base, api: base + 1, db: `app_dev_slot${slot}` }
+}
+```
+
+Linked stacks don't read from the shared queue, so they don't take the main stack's messages, and a branch with new migrations refuses to start on the shared dev database.
+
+### 5. The agent that starts a stack stops it
+
+Verification now ends with a required step: stop the containers you started, and check that `docker ps` shows nothing for that project. For lock files: get the absolute path with `git rev-parse --show-toplevel`, delete the file, and check that it's gone. Don't trust the exit code.
+
+### 6. Use labels that mean one thing
+
+- **READY / BLOCKED** instead of "mergeable", which GitHub already uses for "no conflicts". READY means the run found no product bug and no conflicts. CI gets its own line.
+- **FOLDED** for work merged into an epic branch but not into `main` yet, so the index stops saying todo for finished work.
+
+## What's still not solved
+
+- **I release stale claims and leftover lease files by hand.**
+- **Only three linked slots.** A fourth agent waits, or I stop one.
+- **A claim covers a plan, not files.** Two plans can still edit the same files and conflict at merge.
+- **Worktrees pile up.** One morning I had dozens and asked an agent which were merged and idle.
+
+<Image src="/blog/agent-fleet-lock/3-improvement.jpg" alt="Doodle of robots working calmly on their own branches and slots around a padlocked claims branch" width={1280} height={720} />
+
+And that's it! Worktrees separate checkouts, slots separate ports and databases, and a claim on a branch keeps two agents off one plan. You need all three, plus cleanup. The claim is a JSON file on a branch, so any agent that can push to the repo can use it, wherever it runs.
+
+Thanks for reading! If this helped you, come say hi on [LinkedIn](https://www.linkedin.com/in/lverdiell) or [X](https://x.com/Lverdiell) 😅
